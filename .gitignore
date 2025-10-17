@@ -23,6 +23,10 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
+# AI assistant folders
+.cursor/
+.claude/
+
 # wrangler files
 .wrangler
 .dev.vars*
