@@ -13,9 +13,9 @@
   --color-base-300: oklch(93% 0.02 50);
   --color-base-content: oklch(25% 0.03 50);
 
-  /* Primary - Deep red/crimson (high testosterone) */
-  --color-primary: oklch(55% 0.28 20);
-  --color-primary-content: oklch(98% 0.01 20);
+  /* Primary - Dark gunmetal */
+  --color-primary: oklch(35% 0.02 240);
+  --color-primary-content: oklch(98% 0.01 240);
 
   /* Secondary - Deep blue/navy (high testosterone) */
   --color-secondary: oklch(50% 0.22 240);

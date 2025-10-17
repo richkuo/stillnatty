@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import background from '../assets/background.svg';
 import Header from '../components/Header.astro';
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
 const { title = 'Still Natty' } = Astro.props;
 ---
 <!doctype html>
-<html lang="en" class="m-0 w-full h-full">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -17,7 +18,8 @@ const { title = 'Still Natty' } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="m-0 w-full h-full bg-base-100 text-base-content">
+  <body>
+    <img src={background.src} alt="" class="fixed inset-0 w-full h-full -z-10 blur-[100px]" />
     <Header />
     <slot />
   </body>
