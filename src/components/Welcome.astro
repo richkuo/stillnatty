@@ -1,63 +1,25 @@
 ---
 import { getCollection } from 'astro:content';
-import background from '../assets/background.svg';
 
 const peptides = await getCollection('peptides');
 ---
 
-<div id="container">
-  <img id="background" src={background.src} alt="" fetchpriority="high" />
-  <main>
-    <section id="hero">
-      <h1 class="text-4xl font-bold mb-8 text-center">Peptides</h1>
+<main class="h-full flex justify-center items-center">
+  <section class="flex flex-col items-center justify-center p-8 md:p-4 md:pt-[10%]">
+    <h1 class="text-4xl md:text-5xl font-bold mb-8 text-center text-primary">Peptides</h1>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
-        {peptides.map((peptide) => (
-          <a href={`/${peptide.slug}`} class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-            <div class="card-body">
-              <h2 class="card-title">{peptide.data.title}</h2>
-              <p>{peptide.data.description}</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl w-full">
+      {peptides.map((peptide) => (
+        <a href={`/${peptide.slug}`} class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+          <div class="card-body">
+            <h2 class="card-title text-primary">{peptide.data.title}</h2>
+            <p class="text-base-content">{peptide.data.description}</p>
+            <div class="card-actions justify-end mt-4">
+              <span class="badge badge-primary badge-outline">Learn more →</span>
             </div>
-          </a>
-        ))}
-      </div>
-    </section>
-  </main>
-</div>
-
-<style>
-  #background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    filter: blur(100px);
-  }
-
-  #container {
-    height: 100%;
-  }
-
-  main {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-  }
-
-  #hero {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    padding: 2rem;
-  }
-
-  @media screen and (max-width: 768px) {
-    #hero {
-      padding: 1rem;
-      padding-top: 10%;
-    }
-  }
-</style>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</main>
