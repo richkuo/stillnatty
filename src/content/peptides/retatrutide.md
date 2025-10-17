@@ -8,7 +8,7 @@ description: Research-backed information about retatrutide. This peptide require
 benefits: ["Research needed - please add specific benefits"]
 dosage_levels: ["Research needed - please add dosage information"]
 research: ["Wikipedia: https://en.wikipedia.org/wiki/Retatrutide", "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=Retatrutide", "Clinical Trials: https://clinicaltrials.gov/search?term=Retatrutide", "Swolverine Research: https://swolverine.com/blogs/search?q=Retatrutide", "Wikipedia: https://en.wikipedia.org/wiki/retatrutide", "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=retatrutide", "Clinical Trials: https://clinicaltrials.gov/search?term=retatrutide", "Swolverine Research: https://swolverine.com/blogs/search?q=retatrutide"]
-tags: ["research needed"]
+tags: []
 affiliate_links: []
 is_natty: false
 created_at: 2025-10-17T08:26:21.285Z

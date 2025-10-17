@@ -8,7 +8,7 @@ description: Research-backed information about tirzepatide. This peptide require
 benefits: ["Research needed - please add specific benefits"]
 dosage_levels: ["Research needed - please add dosage information"]
 research: ["Wikipedia: https://en.wikipedia.org/wiki/Tirzepatide", "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=Tirzepatide", "Clinical Trials: https://clinicaltrials.gov/search?term=Tirzepatide", "Swolverine Research: https://swolverine.com/blogs/search?q=Tirzepatide", "Wikipedia: https://en.wikipedia.org/wiki/tirzepatide", "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=tirzepatide", "Clinical Trials: https://clinicaltrials.gov/search?term=tirzepatide", "Swolverine Research: https://swolverine.com/blogs/search?q=tirzepatide"]
-tags: ["research needed"]
+tags: []
 affiliate_links: []
 is_natty: false
 created_at: 2025-10-17T08:26:21.286Z

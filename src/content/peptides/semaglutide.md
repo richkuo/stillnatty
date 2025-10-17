@@ -8,7 +8,7 @@ description: Research-backed information about semaglutide. This peptide require
 benefits: ["Research needed - please add specific benefits"]
 dosage_levels: ["Research needed - please add dosage information"]
 research: ["Wikipedia: https://en.wikipedia.org/wiki/Semaglutide", "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=Semaglutide", "Clinical Trials: https://clinicaltrials.gov/search?term=Semaglutide", "Swolverine Research: https://swolverine.com/blogs/search?q=Semaglutide", "Wikipedia: https://en.wikipedia.org/wiki/semaglutide", "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=semaglutide", "Clinical Trials: https://clinicaltrials.gov/search?term=semaglutide", "Swolverine Research: https://swolverine.com/blogs/search?q=semaglutide"]
-tags: ["research needed"]
+tags: []
 affiliate_links: []
 is_natty: false
 created_at: 2025-10-17T08:26:21.285Z
