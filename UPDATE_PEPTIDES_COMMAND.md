@@ -121,8 +121,8 @@ Files are automatically named based on peptide names:
 ## 🎯 Example Workflow
 
 ```bash
-# Add multiple peptides at once
-bun run add_peptides "BPC-157" "TB-500" "Ipamorelin" "CJC-1295"
+# Update all peptides from constants file
+bun run update_peptides
 
 # Check generated files
 ls src/content/peptides/
@@ -222,9 +222,45 @@ Planned improvements include:
 - **Batch Processing** - Process multiple peptides from CSV files
 - **Quality Validation** - Automatic validation of generated content
 
+## Architecture
+
+### Source of Truth: `src/constants/peptides.ts`
+
+The peptides constants file serves as the single source of truth for:
+
+1. **Peptide List** (`CURRENT_PEPTIDE_FILES`)
+   - Defines which peptides exist in the system
+   - Used by `update_peptides.js` to process files
+   - Used by Astro content schema validation
+
+2. **Valid Tags** (`PEPTIDE_TAGS`)
+   - Defines all allowed tag values
+   - Used by both schema validation and file generation
+   - Ensures consistency across the application
+
+### Workflow
+
+```
+src/constants/peptides.ts (CURRENT_PEPTIDE_FILES)
+            ↓
+    bun run update_peptides
+            ↓
+src/content/peptides/*.md (generated/updated)
+            ↓
+    Astro content collection (validated against schema)
+```
+
+### Adding a New Peptide
+
+1. Add slug to `CURRENT_PEPTIDE_FILES` in `src/constants/peptides.ts`
+2. (Optional) Add enhanced data to `update_peptides.js`
+3. Run `bun run update_peptides`
+4. Review and edit the generated file
+5. Commit changes
+
 ## Support
 
-For issues or questions about the Add Peptides command system, please refer to the generated files and ensure they meet your content requirements.
+For issues or questions about the Update Peptides command system, please refer to the generated files and ensure they meet your content requirements.
 
 ---
 *Command created for research data scientists working with peptide documentation*
