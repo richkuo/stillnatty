@@ -1,0 +1,41 @@
+---
+import type { GetStaticPaths, InferGetStaticParamsType, InferGetStaticPropsType } from 'astro';
+import Layout from '../layouts/Layout.astro';
+
+interface Frontmatter {
+  title?: string;
+  description?: string;
+}
+
+export const getStaticPaths = (async () => {
+  const peptideModules = import.meta.glob<Frontmatter>('../content/peptides/*.md', { eager: true });
+
+  const peptideFiles = Object.entries(peptideModules).map(([path, file]) => {
+    const slug = path.split('/').pop()?.replace('.md', '') || '';
+    return {
+      params: { peptide: slug },
+      props: { file }
+    };
+  });
+
+  return peptideFiles;
+}) satisfies GetStaticPaths;
+
+type Params = InferGetStaticParamsType<typeof getStaticPaths>;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { file } = Astro.props as Props;
+const { default: Content, frontmatter } = file as { default: any; frontmatter: Frontmatter };
+---
+
+<Layout title={frontmatter.title || 'Peptide'}>
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <article class="prose prose-lg">
+      <h1>{frontmatter.title}</h1>
+      {
+        frontmatter.description && <p class="text-xl text-gray-600">{frontmatter.description}</p>
+      }
+      <Content />
+    </article>
+  </main>
+</Layout>
