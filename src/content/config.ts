@@ -30,6 +30,8 @@ const peptides = defineCollection({
     tags: z.array(z.enum(PEPTIDE_TAGS)),
     affiliate_links: z.array(z.string()),
     is_natty: z.boolean().default(true),
+    created_at: z.coerce.date(),
+    last_updated_at: z.coerce.date(),
   }),
 });
 

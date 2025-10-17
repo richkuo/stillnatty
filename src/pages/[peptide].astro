@@ -15,6 +15,8 @@ interface Frontmatter {
   tags?: string[];
   affiliate_links?: string[];
   is_natty?: boolean;
+  created_at?: string;
+  last_updated_at?: string;
 }
 
 export const getStaticPaths = (async () => {
@@ -183,6 +185,12 @@ const { default: Content, frontmatter } = file as { default: any; frontmatter: F
             <div class="prose prose-lg max-w-none">
               <Content />
             </div>
+            
+            {frontmatter.last_updated_at && (
+              <div class="mt-4 text-sm text-base-content/60">
+                Last Updated: {new Date(frontmatter.last_updated_at).toLocaleDateString()}
+              </div>
+            )}
           </div>
         </article>
       </div>

@@ -11,4 +11,6 @@ research: ["Study 1: https://example.com/study1", "Study 2: https://example.com/
 tags: ["recovery", "muscle gain", "subcutaneous"]
 affiliate_links: ["https://example.com/buy1", "https://example.com/buy2"]
 is_natty: false
+created_at: 2025-10-16T00:00:00.000Z
+last_updated_at: 2025-10-17T00:00:00.000Z
 ---
