@@ -4,7 +4,17 @@ import Layout from '../layouts/Layout.astro';
 
 interface Frontmatter {
   title?: string;
+  popular_name?: string;
+  developmental_codes?: string[];
+  street_names?: string[];
+  product_names?: string[];
   description?: string;
+  benefits?: string[];
+  dosage_levels?: string[];
+  research?: string[];
+  tags?: string[];
+  affiliate_links?: string[];
+  is_natty?: boolean;
 }
 
 export const getStaticPaths = (async () => {
@@ -34,17 +44,120 @@ const { default: Content, frontmatter } = file as { default: any; frontmatter: F
       <a href="/" class="link link-primary mb-4 inline-block">← Back to Peptides</a>
       <article class="card bg-base-100 shadow-xl">
         <div class="card-body">
-          <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">{frontmatter.title}</h1>
-          {
-            frontmatter.description && (
-              <div class="alert alert-info mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span class="text-lg">{frontmatter.description}</span>
+          <div class="flex items-start justify-between mb-4">
+            <h1 class="text-4xl md:text-5xl font-bold text-primary">{frontmatter.title}</h1>
+            {frontmatter.is_natty !== undefined && (
+              <span class={`badge badge-lg ${frontmatter.is_natty ? 'badge-success' : 'badge-error'}`}>
+                {frontmatter.is_natty ? '✓ Natty' : '✗ Not Natty'}
+              </span>
+            )}
+          </div>
+
+          {frontmatter.tags && frontmatter.tags.length > 0 && (
+            <div class="flex flex-wrap gap-2 mb-4">
+              {frontmatter.tags.map((tag) => (
+                <span class="badge badge-primary">{tag}</span>
+              ))}
+            </div>
+          )}
+
+          {frontmatter.description && (
+            <div class="alert alert-info mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span class="text-lg">{frontmatter.description}</span>
+            </div>
+          )}
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {frontmatter.popular_name && (
+              <div class="bg-base-200 p-4 rounded-lg">
+                <h3 class="font-bold text-sm uppercase text-base-content/70 mb-2">Popular Name</h3>
+                <p class="text-lg font-semibold">{frontmatter.popular_name}</p>
               </div>
-            )
-          }
+            )}
+
+            {frontmatter.developmental_codes && frontmatter.developmental_codes.length > 0 && (
+              <div class="bg-base-200 p-4 rounded-lg">
+                <h3 class="font-bold text-sm uppercase text-base-content/70 mb-2">Developmental Codes</h3>
+                <ul class="list-disc list-inside">
+                  {frontmatter.developmental_codes.map((code) => (
+                    <li>{code}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {frontmatter.street_names && frontmatter.street_names.length > 0 && (
+              <div class="bg-base-200 p-4 rounded-lg">
+                <h3 class="font-bold text-sm uppercase text-base-content/70 mb-2">Street Names</h3>
+                <ul class="list-disc list-inside">
+                  {frontmatter.street_names.map((name) => (
+                    <li>{name}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {frontmatter.product_names && frontmatter.product_names.length > 0 && (
+              <div class="bg-base-200 p-4 rounded-lg">
+                <h3 class="font-bold text-sm uppercase text-base-content/70 mb-2">Product Names</h3>
+                <ul class="list-disc list-inside">
+                  {frontmatter.product_names.map((name) => (
+                    <li>{name}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {frontmatter.benefits && frontmatter.benefits.length > 0 && (
+              <div class="bg-base-200 p-4 rounded-lg">
+                <h3 class="font-bold text-sm uppercase text-base-content/70 mb-2">Benefits</h3>
+                <ul class="list-disc list-inside">
+                  {frontmatter.benefits.map((benefit) => (
+                    <li>{benefit}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {frontmatter.dosage_levels && frontmatter.dosage_levels.length > 0 && (
+              <div class="bg-base-200 p-4 rounded-lg">
+                <h3 class="font-bold text-sm uppercase text-base-content/70 mb-2">Dosage Levels</h3>
+                <ul class="list-disc list-inside">
+                  {frontmatter.dosage_levels.map((level) => (
+                    <li>{level}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {frontmatter.research && frontmatter.research.length > 0 && (
+              <div class="bg-base-200 p-4 rounded-lg">
+                <h3 class="font-bold text-sm uppercase text-base-content/70 mb-2">Research</h3>
+                <ul class="list-disc list-inside">
+                  {frontmatter.research.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {frontmatter.affiliate_links && frontmatter.affiliate_links.length > 0 && (
+              <div class="bg-base-200 p-4 rounded-lg">
+                <h3 class="font-bold text-sm uppercase text-base-content/70 mb-2">Where to Buy</h3>
+                <ul class="list-disc list-inside">
+                  {frontmatter.affiliate_links.map((link) => (
+                    <li><a href={link} class="link link-primary" target="_blank" rel="noopener noreferrer">{link}</a></li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
           <div class="divider"></div>
           <div class="prose prose-lg max-w-none text-base-content">
             <Content />
