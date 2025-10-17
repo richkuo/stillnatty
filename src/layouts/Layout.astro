@@ -1,12 +1,13 @@
 ---
 import '../styles/global.css'
 import background from '../assets/background.svg';
+import Header from '../components/Header.astro';
 
 interface Props {
   title?: string;
 }
 
-const { title = 'Astro Basics' } = Astro.props;
+const { title = 'Still Natty' } = Astro.props;
 ---
 <!doctype html>
 <html lang="en" class="m-0 w-full h-full">
@@ -19,6 +20,7 @@ const { title = 'Astro Basics' } = Astro.props;
   </head>
   <body class="m-0 w-full h-full bg-base-100 text-base-content">
     <img src={background.src} alt="" class="fixed inset-0 w-full h-full -z-10 blur-[100px]" />
+    <Header />
     <slot />
   </body>
 </html>

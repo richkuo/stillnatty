@@ -30,13 +30,8 @@ const { default: Content, frontmatter } = file as { default: any; frontmatter: F
 
 <Layout title={frontmatter.title || 'Peptide'}>
   <div class="min-h-screen flex flex-col">
-    <div class="navbar bg-base-100/80 backdrop-blur-sm shadow-lg sticky top-0 z-50">
-      <div class="flex-1">
-        <a href="/" class="btn btn-ghost text-xl text-primary">← Back to Peptides</a>
-      </div>
-    </div>
-
     <main class="flex-1 container mx-auto px-4 py-8 max-w-4xl">
+      <a href="/" class="link link-primary mb-4 inline-block">← Back to Peptides</a>
       <article class="card bg-base-100 shadow-xl">
         <div class="card-body">
           <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">{frontmatter.title}</h1>
