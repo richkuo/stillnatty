@@ -1,19 +1,5 @@
 import { defineCollection, z } from 'astro:content';
-
-const PEPTIDE_TAGS = [
-  'muscle gain',
-  'fat loss',
-  'sleep',
-  'skin and hair',
-  'recovery',
-  'healing',
-  'growth hormone',
-  'sarm',
-  'oral',
-  'injectable',
-  'subcutaneous',
-  'intramuscular',
-] as const;
+import { CURRENT_PEPTIDE_FILES, PEPTIDE_TAGS } from '../constants/peptides';
 
 const peptides = defineCollection({
   type: 'content',
