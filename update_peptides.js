@@ -222,9 +222,9 @@ class PeptideResearcher {
     else {
       // Generic template for unknown peptides
       baseData.description = `Research-backed information about ${peptideName}. This peptide requires further research and verification.`;
-      baseData.benefits = ['Research needed - please add specific benefits'];
-      baseData.dosage_levels = ['Research needed - please add dosage information'];
-      baseData.tags = ['research needed'];
+      baseData.benefits = [];
+      baseData.dosage_levels = [];
+      baseData.tags = [];
     }
 
     return baseData;
@@ -241,10 +241,10 @@ class PeptideResearcher {
       street_names: [],
       product_names: [],
       description: `Research-backed information about ${peptideName}. Please update with specific research data.`,
-      benefits: ['Research needed - please add specific benefits'],
-      dosage_levels: ['Research needed - please add dosage information'],
-      research: [`Research needed for ${peptideName}`],
-      tags: ['research needed'],
+      benefits: [],
+      dosage_levels: [],
+      research: [],
+      tags: [],
       affiliate_links: [],
       is_natty: false,
       created_at: new Date(),

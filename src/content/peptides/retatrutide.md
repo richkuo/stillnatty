@@ -1,24 +1,24 @@
 ---
-title: Retatrutide
-popular_name: "Retatrutide"
+title: retatrutide
+popular_name: "retatrutide"
 developmental_codes: []
 street_names: []
 product_names: []
-description: Research-backed information about Retatrutide. This peptide requires further research and verification.
+description: Research-backed information about retatrutide. This peptide requires further research and verification.
 benefits: ["Research needed - please add specific benefits"]
 dosage_levels: ["Research needed - please add dosage information"]
-research: ["Wikipedia: https://en.wikipedia.org/wiki/Retatrutide", "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=Retatrutide", "Clinical Trials: https://clinicaltrials.gov/search?term=Retatrutide", "Swolverine Research: https://swolverine.com/blogs/search?q=Retatrutide"]
+research: ["Wikipedia: https://en.wikipedia.org/wiki/Retatrutide", "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=Retatrutide", "Clinical Trials: https://clinicaltrials.gov/search?term=Retatrutide", "Swolverine Research: https://swolverine.com/blogs/search?q=Retatrutide", "Wikipedia: https://en.wikipedia.org/wiki/retatrutide", "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=retatrutide", "Clinical Trials: https://clinicaltrials.gov/search?term=retatrutide", "Swolverine Research: https://swolverine.com/blogs/search?q=retatrutide"]
 tags: ["research needed"]
 affiliate_links: []
 is_natty: false
 created_at: 2025-10-17T08:26:21.285Z
-last_updated_at: 2025-10-17T08:26:21.285Z
+last_updated_at: 2025-10-17T08:58:00.419Z
 ---
 
-# Retatrutide
+# retatrutide
 
 ## Overview
-Research-backed information about Retatrutide. This peptide requires further research and verification.
+Research-backed information about retatrutide. This peptide requires further research and verification.
 
 ## Benefits
 - Research needed - please add specific benefits
@@ -31,9 +31,13 @@ Research-backed information about Retatrutide. This peptide requires further res
 - PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=Retatrutide
 - Clinical Trials: https://clinicaltrials.gov/search?term=Retatrutide
 - Swolverine Research: https://swolverine.com/blogs/search?q=Retatrutide
+- Wikipedia: https://en.wikipedia.org/wiki/retatrutide
+- PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=retatrutide
+- Clinical Trials: https://clinicaltrials.gov/search?term=retatrutide
+- Swolverine Research: https://swolverine.com/blogs/search?q=retatrutide
 
 ## Additional Information
-*Please add more specific research data, clinical studies, and detailed information about Retatrutide.*
+*Please add more specific research data, clinical studies, and detailed information about retatrutide.*
 
 ## Safety & Considerations
 - Always consult with a healthcare professional before starting any peptide protocol
@@ -43,4 +47,4 @@ Research-backed information about Retatrutide. This peptide requires further res
 - Ensure proper storage and handling of peptides
 
 ## Stacking Recommendations
-*Add information about effective peptide combinations and stacking protocols for Retatrutide.*
+*Add information about effective peptide combinations and stacking protocols for retatrutide.*
