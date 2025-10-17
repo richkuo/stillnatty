@@ -22,7 +22,7 @@
   --color-secondary-content: oklch(98% 0.01 240);
 
   /* Accent - Lime/tropical green */
-  --color-accent: oklch(75% 0.22 140);
+  --color-accent: oklch(75% 0.12 140);
   --color-accent-content: oklch(20% 0.03 140);
 
   /* Neutral - Warm sand */
@@ -30,19 +30,19 @@
   --color-neutral-content: oklch(98% 0.01 50);
 
   /* Info - Sky blue */
-  --color-info: oklch(72% 0.16 230);
+  --color-info: oklch(72% 0.09 230);
   --color-info-content: oklch(98% 0.01 230);
 
   /* Success - Fresh green */
-  --color-success: oklch(70% 0.20 150);
+  --color-success: oklch(70% 0.11 150);
   --color-success-content: oklch(98% 0.01 150);
 
   /* Warning - Sunset orange */
-  --color-warning: oklch(78% 0.20 70);
+  --color-warning: oklch(78% 0.12 70);
   --color-warning-content: oklch(20% 0.03 70);
 
   /* Error - Hibiscus red */
-  --color-error: oklch(65% 0.25 25);
+  --color-error: oklch(65% 0.15 25);
   --color-error-content: oklch(98% 0.01 25);
 
   /* Border radius - medium roundness for tropical feel */
