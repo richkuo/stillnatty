@@ -1,12 +1,12 @@
-# 🧬 Add Peptides Command Documentation
+# 🧬 Update Peptides Command Documentation
 
 ## Overview
 
-The Add Peptides command system automatically generates and updates markdown files for peptides defined in `src/constants/peptides.ts`. This system uses the constants file as the source of truth for which peptides to process.
+The Update Peptides command system automatically generates and updates markdown files for peptides defined in `src/constants/peptides.ts`. This system uses the constants file as the source of truth for which peptides to process.
 
 ## Command
 ```bash
-bun run add_peptides
+bun run update_peptides
 ```
 
 ## What It Does
@@ -23,7 +23,7 @@ bun run add_peptides
 
 ```bash
 # Generate/update all peptides from constants file
-bun run add_peptides
+bun run update_peptides
 ```
 
 The command processes all peptides listed in `CURRENT_PEPTIDE_FILES`:
@@ -155,7 +155,7 @@ export const CURRENT_PEPTIDE_FILES = [
 ] as const;
 ```
 
-**Step 2:** (Optional) Add enhanced data in `add_peptides.js` by editing the `getEnhancedPeptideData()` function:
+**Step 2:** (Optional) Add enhanced data in `update_peptides.js` by editing the `getEnhancedPeptideData()` function:
 
 ```javascript
 else if (lowerName.includes('new-peptide')) {
@@ -170,7 +170,7 @@ else if (lowerName.includes('new-peptide')) {
 **Step 3:** Run the command:
 
 ```bash
-bun run add_peptides
+bun run update_peptides
 ```
 
 ### Modifying Research Sources

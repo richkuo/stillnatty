@@ -9,7 +9,7 @@
 		"astro": "astro",
 		"deploy": "astro build && wrangler deploy",
 		"cf-typegen": "wrangler types",
-		"add_peptides": "bun add_peptides.js"
+		"update_peptides": "bun update_peptides.js"
 	},
 	"dependencies": {
 		"@astrojs/cloudflare": "^12.6.10",

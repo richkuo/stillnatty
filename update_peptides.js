@@ -1,12 +1,12 @@
 #!/usr/bin/env bun
 
 /**
- * Add Peptides Command with Web Research
+ * Update Peptides Command with Web Research
  *
- * Usage: bun add_peptides.js
+ * Usage: bun update_peptides.js
  *
  * This script reads peptide names from CURRENT_PEPTIDE_FILES constant,
- * researches them using web scraping, and creates markdown files.
+ * researches them using web scraping, and creates/updates markdown files.
  */
 
 import { readFileSync, writeFileSync, existsSync } from 'fs';
@@ -502,7 +502,7 @@ ${data.research.map(study => `- ${study}`).join('\n')}
 // Main execution
 async function main() {
   console.log(`
-🧬 Add Peptides Command
+🧬 Update Peptides Command
 
 Reading peptide list from CURRENT_PEPTIDE_FILES...
 

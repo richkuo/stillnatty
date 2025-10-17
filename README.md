@@ -41,14 +41,14 @@ All commands are run from the root of the project, from a terminal:
 | `bun wrangler pages deploy` | Deploy to Cloudflare Pages                     |
 | `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `bun astro -- --help` | Get help using the Astro CLI                     |
-| `bun run add_peptides` | Generate/update peptide markdown files from constants |
+| `bun run update_peptides` | Generate/update peptide markdown files from constants |
 
-## 🧬 Add Peptides Command
+## 🧬 Update Peptides Command
 
-Automatically generate peptide documentation files with comprehensive research data.
+Automatically generate and update peptide documentation files with comprehensive research data.
 
 ```bash
-bun run add_peptides
+bun run update_peptides
 ```
 
 This command reads the peptide list from `src/constants/peptides.ts` (CURRENT_PEPTIDE_FILES) and generates or updates markdown files in `src/content/peptides/` with research data, dosage information, and structured frontmatter.
