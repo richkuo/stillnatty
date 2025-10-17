@@ -41,23 +41,17 @@ All commands are run from the root of the project, from a terminal:
 | `bun wrangler pages deploy` | Deploy to Cloudflare Pages                     |
 | `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `bun astro -- --help` | Get help using the Astro CLI                     |
-| `bun run add_peptides "peptide1" "peptide2"` | Add new peptide markdown files |
-| `/add_peptides peptide1 peptide2` | Cursor command for adding peptides |
+| `bun run add_peptides` | Generate/update peptide markdown files from constants |
 
 ## 🧬 Add Peptides Command
 
-Quickly generate peptide documentation files with comprehensive research data.
+Automatically generate peptide documentation files with comprehensive research data.
 
 ```bash
-bun run add_peptides "BPC-157" "TB-500" "Ipamorelin"
+bun run add_peptides
 ```
 
-**Or use the Cursor command:**
-```
-/add_peptides BPC-157 TB-500 Ipamorelin
-```
-
-See `ADD_PEPTIDES_COMMAND.md` for complete documentation.
+This command reads the peptide list from `src/constants/peptides.ts` (CURRENT_PEPTIDE_FILES) and generates or updates markdown files in `src/content/peptides/` with research data, dosage information, and structured frontmatter.
 
 ## 👀 Want to learn more?
 
