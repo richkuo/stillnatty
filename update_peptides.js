@@ -52,21 +52,20 @@ class PeptideResearcher {
     // This would integrate with:
     // - Wikipedia API: https://en.wikipedia.org/api/rest_v1/page/summary/
     // - PubMed API: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/
-    // - Swolverine.com scraping
+    // - Swolverine.com scraping (for dosage info, not included in research links)
     // - Other research databases
-    
+
     console.log(`🌐 Researching ${peptideName} from web sources...`);
-    
+
     // For now, return enhanced template data
     // In production, you'd implement actual web scraping here
     const baseData = await this.getEnhancedPeptideData(peptideName);
-    
-    // Add research links
+
+    // Add research links (Swolverine is used internally for dosage but not included)
     baseData.research = [
       `Wikipedia: https://en.wikipedia.org/wiki/${peptideName.replace(/\s+/g, '_')}`,
       `PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(peptideName)}`,
-      `Clinical Trials: https://clinicaltrials.gov/search?term=${encodeURIComponent(peptideName)}`,
-      `Swolverine Research: https://swolverine.com/blogs/search?q=${encodeURIComponent(peptideName)}`
+      `Clinical Trials: https://clinicaltrials.gov/search?term=${encodeURIComponent(peptideName)}`
     ];
 
     return baseData;
@@ -334,6 +333,88 @@ class PeptideResearcher {
   }
 
   /**
+   * Check if a value is a placeholder/invalid text
+   */
+  isPlaceholderValue(value) {
+    if (!value || typeof value !== 'string') return false;
+    const lowerValue = value.toLowerCase();
+    const placeholders = [
+      'research needed',
+      'please add',
+      'please update',
+      'add information',
+      'requires further research',
+      'verification needed'
+    ];
+    return placeholders.some(placeholder => lowerValue.includes(placeholder));
+  }
+
+  /**
+   * Check if an array is empty or contains only placeholder/invalid values
+   */
+  isEmptyOrInvalid(array) {
+    if (!Array.isArray(array) || array.length === 0) return true;
+    return array.every(item => this.isPlaceholderValue(item));
+  }
+
+  /**
+   * Normalize URL for comparison (lowercase, trim whitespace)
+   */
+  normalizeUrl(url) {
+    if (typeof url !== 'string') return '';
+    return url.trim().toLowerCase();
+  }
+
+  /**
+   * Intelligently merge two arrays, removing duplicates and placeholders
+   */
+  mergeArraysIntelligently(existingArray, newArray, fieldName) {
+    const existing = Array.isArray(existingArray) ? existingArray : [];
+    const newItems = Array.isArray(newArray) ? newArray : [];
+
+    // Filter out placeholders from both arrays
+    const validExisting = existing.filter(item => !this.isPlaceholderValue(item));
+    const validNew = newItems.filter(item => !this.isPlaceholderValue(item));
+
+    // If existing has valid data but new doesn't, keep existing
+    if (validExisting.length > 0 && validNew.length === 0) {
+      return validExisting;
+    }
+
+    // If new has valid data but existing doesn't, use new
+    if (validExisting.length === 0 && validNew.length > 0) {
+      return validNew;
+    }
+
+    // Both have data - merge intelligently
+    if (fieldName === 'research') {
+      // For research URLs, use case-insensitive comparison
+      const urlMap = new Map();
+
+      // Add existing URLs (normalized as keys, original as values)
+      validExisting.forEach(url => {
+        const normalized = this.normalizeUrl(url);
+        if (normalized && !urlMap.has(normalized)) {
+          urlMap.set(normalized, url);
+        }
+      });
+
+      // Add new URLs only if not already present (case-insensitive)
+      validNew.forEach(url => {
+        const normalized = this.normalizeUrl(url);
+        if (normalized && !urlMap.has(normalized)) {
+          urlMap.set(normalized, url);
+        }
+      });
+
+      return Array.from(urlMap.values());
+    } else {
+      // For other arrays, use Set for exact duplicate removal
+      return [...new Set([...validExisting, ...validNew])];
+    }
+  }
+
+  /**
    * Merge existing data with new research data
    */
   mergeData(existingData, newData) {
@@ -344,32 +425,46 @@ class PeptideResearcher {
       last_updated_at: new Date(),
     };
 
-    // Preserve affiliate_links if they exist
+    // Preserve affiliate_links if they exist (never overwrite user-added links)
     if (existingData.affiliate_links && existingData.affiliate_links.length > 0) {
       mergedData.affiliate_links = existingData.affiliate_links;
     }
 
-    // Merge arrays intelligently (keep unique values)
+    // Smart merge for string fields
+    // Prefer existing data if new data is generic/placeholder
+    if (existingData.description &&
+        !this.isPlaceholderValue(existingData.description) &&
+        (this.isPlaceholderValue(newData.description) || !newData.description)) {
+      mergedData.description = existingData.description;
+    }
+
+    if (existingData.popular_name &&
+        existingData.popular_name !== existingData.title &&
+        (!newData.popular_name || newData.popular_name === newData.title)) {
+      mergedData.popular_name = existingData.popular_name;
+    }
+
+    // Intelligently merge array fields
     const arrayFields = ['developmental_codes', 'street_names', 'product_names', 'benefits', 'dosage_levels', 'research', 'tags'];
-    
+
     for (const field of arrayFields) {
-      if (existingData[field] && Array.isArray(existingData[field])) {
-        const existingSet = new Set(existingData[field]);
-        const newSet = new Set(newData[field] || []);
-        mergedData[field] = [...new Set([...existingSet, ...newSet])];
-      }
+      mergedData[field] = this.mergeArraysIntelligently(
+        existingData[field],
+        newData[field],
+        field
+      );
     }
 
     return mergedData;
   }
 
   /**
-   * Generate comprehensive markdown content
+   * Generate frontmatter-only markdown content
    */
   generateMarkdown(data) {
     const createdAt = data.created_at instanceof Date ? data.created_at.toISOString() : new Date().toISOString();
     const lastUpdatedAt = data.last_updated_at instanceof Date ? data.last_updated_at.toISOString() : new Date().toISOString();
-    
+
     const frontmatter = `---
 title: ${data.title}
 popular_name: "${data.popular_name}"
@@ -385,35 +480,7 @@ affiliate_links: [${data.affiliate_links.map(link => `"${link}"`).join(', ')}]
 is_natty: ${data.is_natty}
 created_at: ${createdAt}
 last_updated_at: ${lastUpdatedAt}
----
-
-# ${data.title}
-
-## Overview
-${data.description}
-
-## Benefits
-${data.benefits.map(benefit => `- ${benefit}`).join('\n')}
-
-## Dosage Levels
-${data.dosage_levels.map(dosage => `- ${dosage}`).join('\n')}
-
-## Research & Studies
-${data.research.map(study => `- ${study}`).join('\n')}
-
-## Additional Information
-*Please add more specific research data, clinical studies, and detailed information about ${data.title}.*
-
-## Safety & Considerations
-- Always consult with a healthcare professional before starting any peptide protocol
-- Start with lower doses to assess tolerance
-- Monitor for any adverse reactions
-- Consider cycling protocols for long-term use
-- Ensure proper storage and handling of peptides
-
-## Stacking Recommendations
-*Add information about effective peptide combinations and stacking protocols for ${data.title}.*
-`;
+---`;
 
     return frontmatter;
   }

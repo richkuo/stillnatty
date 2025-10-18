@@ -46,27 +46,19 @@ Each command creates markdown files in `src/content/peptides/` with:
 - ✅ Complete frontmatter matching your Astro schema
 - ✅ Comprehensive benefits and dosage information
 - ✅ Research links to Wikipedia, PubMed, Clinical Trials
-- ✅ Safety considerations and warnings
-- ✅ Professional documentation structure
+- ✅ Automatic timestamp tracking (created_at and last_updated_at)
 
 ## Files Generated
 Location: `src/content/peptides/[peptide-name].md`
 
-Each file includes:
-- Complete YAML frontmatter with timestamps
-- Overview section
-- Benefits list
-- Dosage levels (Beginner/Intermediate/Advanced)
-- Research links
-- Safety considerations
-- Stacking recommendations
+Each file contains only YAML frontmatter (no markdown body content) with:
+- Complete metadata matching the Astro content schema
 - Automatic timestamp tracking (created_at and last_updated_at)
 
 ## Generated File Structure
 
-Each generated markdown file includes:
+Each generated markdown file contains **only frontmatter** (no markdown body):
 
-### Frontmatter (YAML)
 ```yaml
 ---
 title: Peptide Name
@@ -86,13 +78,7 @@ last_updated_at: 2025-10-17T12:00:00.000Z
 ---
 ```
 
-### Content Sections
-- **Overview** - Detailed description
-- **Benefits** - Comprehensive benefit list
-- **Dosage Levels** - Beginner to advanced protocols
-- **Research & Studies** - Multiple research sources
-- **Safety & Considerations** - Important safety information
-- **Stacking Recommendations** - Combination protocols
+All peptide information is stored in the frontmatter fields. The files contain no markdown content after the closing `---`.
 
 ## Research Sources
 
@@ -101,7 +87,8 @@ The system automatically generates links to:
 - **Wikipedia** - General information
 - **PubMed** - Scientific research database
 - **Clinical Trials** - Ongoing and completed studies
-- **Swolverine.com** - Specific dosage and protocol information
+
+**Note**: Swolverine.com is used internally as a reference for determining dosage levels but is not included in the research links.
 
 ## File Naming Convention
 
@@ -112,11 +99,11 @@ Files are automatically named based on peptide names:
 
 ## 📝 Post-Generation Checklist
 
-1. **Review Files** - Check generated content for accuracy
-2. **Add Research** - Include specific studies and clinical data  
+1. **Review Frontmatter** - Check generated metadata for accuracy
+2. **Update Research** - Add specific studies and clinical data to the research array
 3. **Add Affiliate Links** - Include purchasing links (empty by default)
-4. **Verify Dosage** - Cross-reference with current research
-5. **Update Safety Info** - Add specific warnings if needed
+4. **Verify Dosage** - Cross-reference dosage_levels with current research
+5. **Update Benefits** - Add specific benefits to the benefits array
 
 ## 🎯 Example Workflow
 
@@ -195,10 +182,122 @@ When you run the command on an existing peptide file, it will:
 - **Preserve** the original `created_at` timestamp
 - **Update** the `last_updated_at` timestamp to the current time
 - **Preserve** any affiliate links you've added
-- **Merge** new research data with existing content (keeping unique values)
+- **Merge** new research data with existing content using smart merge logic
 - **Enhance** the file with any new information from the research database
+- **Filter** placeholder and duplicate data automatically
 
 This means you can safely re-run the command to refresh peptide data without losing your customizations!
+
+## Smart Merge Behavior
+
+The update system uses intelligent merging to ensure data quality and prevent duplicates:
+
+### Duplicate Prevention
+
+**Research URLs** - Case-insensitive comparison prevents duplicates:
+```
+Before merge:
+- "Wikipedia: https://en.wikipedia.org/wiki/BPC-157"
+- "Wikipedia: https://en.wikipedia.org/wiki/bpc-157"
+(2 items)
+
+After merge:
+- "Wikipedia: https://en.wikipedia.org/wiki/BPC-157"
+(1 item - lowercase duplicate removed)
+```
+
+**Other Arrays** - Exact string matching removes duplicates in:
+- `developmental_codes`
+- `street_names`
+- `product_names`
+- `benefits`
+- `dosage_levels`
+- `tags`
+
+### Placeholder Filtering
+
+The system automatically detects and removes placeholder text:
+
+**Filtered Phrases:**
+- "Research needed"
+- "Please add"
+- "Please update"
+- "Add information"
+- "Requires further research"
+- "Verification needed"
+
+**Example:**
+```yaml
+Before merge:
+benefits: ["Research needed - please add specific benefits"]
+
+After merge:
+benefits: []
+(Placeholder text automatically removed)
+```
+
+### Merge Precedence Rules
+
+**String Fields** (title, description, popular_name):
+- If existing data is valid and new data is placeholder → Keep existing
+- If existing data is placeholder and new data is valid → Use new
+- If both are valid → Use new (allows updates)
+
+**Array Fields** (all array properties):
+- If existing has valid data and new is empty/placeholder → Keep existing only
+- If existing is empty/placeholder and new has valid data → Use new only
+- If both have valid data → Merge unique values from both
+- Placeholders are filtered from both before merging
+
+**Special Fields:**
+- `affiliate_links` - Always preserved (never overwritten)
+- `created_at` - Always preserved from original file
+- `last_updated_at` - Always updated to current timestamp
+
+### Helper Methods
+
+The merge logic uses these validation methods:
+
+1. **`isPlaceholderValue(value)`** - Detects placeholder text patterns
+2. **`isEmptyOrInvalid(array)`** - Checks if array contains only placeholders
+3. **`normalizeUrl(url)`** - Converts URLs to lowercase for comparison
+4. **`mergeArraysIntelligently(existing, new, field)`** - Field-specific merge logic
+
+### Example: Complete Update Flow
+
+**Starting state** (bpc-157.md):
+```yaml
+research: [
+  "Wikipedia: https://en.wikipedia.org/wiki/BPC-157",
+  "Wikipedia: https://en.wikipedia.org/wiki/bpc-157"
+]
+benefits: ["Great for healing"]
+```
+
+**New research data**:
+```yaml
+research: [
+  "Wikipedia: https://en.wikipedia.org/wiki/bpc-157",
+  "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=bpc-157"
+]
+benefits: ["Great for healing", "Reduces inflammation"]
+```
+
+**After merge**:
+```yaml
+research: [
+  "Wikipedia: https://en.wikipedia.org/wiki/BPC-157",
+  "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=bpc-157"
+]
+benefits: ["Great for healing", "Reduces inflammation"]
+```
+
+**What happened:**
+- Duplicate Wikipedia URL removed (case-insensitive)
+- New PubMed URL added
+- New benefit "Reduces inflammation" added
+- Existing benefit preserved
+- No placeholder text present
 
 ## Troubleshooting
 
@@ -211,6 +310,8 @@ Use standard peptide names and codes. The system recognizes common variations bu
 ## Integration with Astro
 
 The generated files are automatically compatible with your Astro content collection schema defined in `src/content/config.ts`. The frontmatter structure matches the required schema exactly.
+
+Since the files contain only frontmatter, you can use Astro's content collections to query and display the peptide data directly from the metadata fields.
 
 ## Future Enhancements
 

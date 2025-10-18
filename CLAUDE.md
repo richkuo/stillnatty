@@ -37,3 +37,10 @@ Run from project root using Bun:
 **Cloudflare Configuration**
 - [wrangler.jsonc](wrangler.jsonc) - compatibility date 2025-10-11, Node.js compat enabled, observability enabled
 - Add bindings (KV, D1, R2, etc.) in wrangler.jsonc
+
+## Documentation
+
+- [UPDATE_PEPTIDES_COMMAND.md](UPDATE_PEPTIDES_COMMAND.md) - Guide for updating peptide content using the update_peptides script
+  - Includes smart merge behavior that prevents duplicates and filters placeholder text
+  - Automatically handles case-insensitive URL deduplication
+  - Preserves user-added data (affiliate links, valid content)
