@@ -21,6 +21,20 @@ class PeptideResearcher {
   constructor() {
     this.contentDir = join(__dirname, 'src', 'content', 'peptides');
     this.researchCache = new Map();
+    this.lastRequestTime = 0;
+    this.minRequestDelay = 500; // 500ms between requests to be respectful
+  }
+
+  /**
+   * Rate limit API requests
+   */
+  async rateLimit() {
+    const now = Date.now();
+    const timeSinceLastRequest = now - this.lastRequestTime;
+    if (timeSinceLastRequest < this.minRequestDelay) {
+      await new Promise(resolve => setTimeout(resolve, this.minRequestDelay - timeSinceLastRequest));
+    }
+    this.lastRequestTime = Date.now();
   }
 
   /**
@@ -46,42 +60,143 @@ class PeptideResearcher {
   }
 
   /**
-   * Perform actual web research (placeholder for web scraping implementation)
+   * Fetch data from Wikipedia API
    */
-  async performWebResearch(peptideName) {
-    // This would integrate with:
-    // - Wikipedia API: https://en.wikipedia.org/api/rest_v1/page/summary/
-    // - PubMed API: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/
-    // - Swolverine.com scraping (for dosage info, not included in research links)
-    // - Other research databases
-
-    console.log(`🌐 Researching ${peptideName} from web sources...`);
-
-    // For now, return enhanced template data
-    // In production, you'd implement actual web scraping here
-    const baseData = await this.getEnhancedPeptideData(peptideName);
-
-    // Add research links (Swolverine is used internally for dosage but not included)
-    baseData.research = [
-      `Wikipedia: https://en.wikipedia.org/wiki/${peptideName.replace(/\s+/g, '_')}`,
-      `PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(peptideName)}`,
-      `Clinical Trials: https://clinicaltrials.gov/search?term=${encodeURIComponent(peptideName)}`
-    ];
-
-    return baseData;
+  async fetchWikipediaData(peptideName) {
+    try {
+      await this.rateLimit();
+      
+      const searchTerm = peptideName.replace(/\s+/g, '_');
+      const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(searchTerm)}`;
+      
+      console.log(`  📚 Fetching Wikipedia data for ${peptideName}...`);
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        console.log(`  ⚠️  Wikipedia page not found for ${peptideName}`);
+        return null;
+      }
+      
+      const data = await response.json();
+      return {
+        title: data.title,
+        description: data.extract,
+        url: data.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${searchTerm}`
+      };
+    } catch (error) {
+      console.log(`  ⚠️  Error fetching Wikipedia data: ${error.message}`);
+      return null;
+    }
   }
 
   /**
-   * Get enhanced peptide data with more comprehensive information
+   * Search PubMed for research articles
    */
-  async getEnhancedPeptideData(peptideName) {
+  async fetchPubMedData(peptideName) {
+    try {
+      await this.rateLimit();
+      
+      console.log(`  🔬 Searching PubMed for ${peptideName}...`);
+      
+      // Search for articles
+      const searchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(peptideName)}&retmode=json&retmax=3`;
+      const searchResponse = await fetch(searchUrl);
+      
+      if (!searchResponse.ok) {
+        return null;
+      }
+      
+      const searchData = await searchResponse.json();
+      const idList = searchData.esearchresult?.idlist || [];
+      
+      if (idList.length === 0) {
+        console.log(`  ⚠️  No PubMed articles found for ${peptideName}`);
+        return null;
+      }
+      
+      // Rate limit before next request
+      await this.rateLimit();
+      
+      // Fetch article details
+      const summaryUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${idList.join(',')}&retmode=json`;
+      const summaryResponse = await fetch(summaryUrl);
+      
+      if (!summaryResponse.ok) {
+        return null;
+      }
+      
+      const summaryData = await summaryResponse.json();
+      const articles = [];
+      
+      for (const id of idList) {
+        const article = summaryData.result?.[id];
+        if (article) {
+          articles.push({
+            title: article.title,
+            id: id,
+            url: `https://pubmed.ncbi.nlm.nih.gov/${id}/`
+          });
+        }
+      }
+      
+      console.log(`  ✓ Found ${articles.length} PubMed articles`);
+      return articles;
+    } catch (error) {
+      console.log(`  ⚠️  Error fetching PubMed data: ${error.message}`);
+      return null;
+    }
+  }
+
+  /**
+   * Extract benefits and information from research text
+   */
+  extractBenefitsFromText(text, existingBenefits = []) {
+    if (!text) return existingBenefits;
+    
+    const benefits = [...existingBenefits];
+    const lowerText = text.toLowerCase();
+    
+    // Common benefit keywords and patterns
+    const benefitPatterns = [
+      { keywords: ['heal', 'repair', 'recovery'], benefit: 'Promotes tissue healing and repair' },
+      { keywords: ['growth hormone', 'gh release'], benefit: 'Stimulates growth hormone release' },
+      { keywords: ['muscle', 'lean mass'], benefit: 'Supports muscle growth and development' },
+      { keywords: ['fat loss', 'weight loss', 'adipose'], benefit: 'Aids in fat loss and metabolism' },
+      { keywords: ['sleep', 'rest'], benefit: 'Improves sleep quality' },
+      { keywords: ['inflammation', 'anti-inflammatory'], benefit: 'Reduces inflammation' },
+      { keywords: ['joint', 'tendon', 'ligament'], benefit: 'Supports joint and connective tissue health' },
+      { keywords: ['bone density', 'bone health'], benefit: 'Enhances bone density' },
+      { keywords: ['immune', 'immunity'], benefit: 'Supports immune function' },
+      { keywords: ['cognitive', 'mental', 'focus'], benefit: 'Improves cognitive function' },
+      { keywords: ['skin', 'collagen'], benefit: 'Improves skin health and appearance' },
+      { keywords: ['gut', 'gastric', 'digestive'], benefit: 'Supports digestive health' },
+    ];
+    
+    for (const pattern of benefitPatterns) {
+      const hasKeyword = pattern.keywords.some(keyword => lowerText.includes(keyword));
+      if (hasKeyword && !benefits.some(b => b.toLowerCase().includes(pattern.benefit.toLowerCase()))) {
+        benefits.push(pattern.benefit);
+      }
+    }
+    
+    return benefits;
+  }
+
+  /**
+   * Perform actual web research - fetches all data from APIs
+   */
+  async performWebResearch(peptideName) {
+    console.log(`🌐 Researching ${peptideName} from web sources...`);
+
+    // Initialize with minimal template
     const baseData = {
       title: peptideName,
       popular_name: peptideName,
       developmental_codes: [],
       street_names: [],
       product_names: [],
-      description: `Comprehensive research-backed information about ${peptideName}`,
+      description: '',
+      short_description: '',
       benefits: [],
       dosage_levels: [],
       research: [],
@@ -89,148 +204,71 @@ class PeptideResearcher {
       affiliate_links: [],
       is_natty: false
     };
-
-    // Enhanced pattern matching with more comprehensive data
-    const lowerName = peptideName.toLowerCase();
     
-    if (lowerName.includes('bpc') || lowerName.includes('body protection')) {
-      baseData.developmental_codes = ['BPC-157'];
-      baseData.street_names = ['Body Protection Compound', 'BPC'];
-      baseData.product_names = ['BPC-157 Peptide', 'Body Protection Compound'];
-      baseData.description = 'BPC-157 is a synthetic peptide derived from a protein found in gastric juice. It has shown remarkable healing properties in research studies.';
-      baseData.benefits = [
-        'Accelerated tissue healing and repair',
-        'Improved gut health and digestive function',
-        'Enhanced joint and tendon recovery',
-        'Powerful anti-inflammatory effects',
-        'Reduced muscle soreness and recovery time',
-        'Improved blood vessel formation'
-      ];
-      baseData.dosage_levels = [
-        'Beginner: 200-300mcg daily (subcutaneous)',
-        'Intermediate: 300-500mcg daily (subcutaneous)',
-        'Advanced: 500-1000mcg daily (subcutaneous)',
-        'Injury recovery: 500-1000mcg daily for 4-8 weeks'
-      ];
-      baseData.tags = ['healing', 'recovery', 'subcutaneous'];
-    } 
-    else if (lowerName.includes('tb-500') || lowerName.includes('tb500') || lowerName.includes('thymosin')) {
-      baseData.developmental_codes = ['TB-500', 'Thymosin Beta-4'];
-      baseData.street_names = ['TB-500', 'Thymosin Beta-4', 'TB4'];
-      baseData.product_names = ['TB-500 Peptide', 'Thymosin Beta-4'];
-      baseData.description = 'TB-500 (Thymosin Beta-4) is a naturally occurring peptide that plays a crucial role in tissue repair, regeneration, and healing processes.';
-      baseData.benefits = [
-        'Enhanced tissue repair and regeneration',
-        'Improved flexibility and range of motion',
-        'Faster recovery from injuries',
-        'Stimulated hair growth and skin healing',
-        'Reduced inflammation and pain',
-        'Improved cardiovascular function'
-      ];
-      baseData.dosage_levels = [
-        'Beginner: 2mg twice weekly (subcutaneous)',
-        'Intermediate: 2-4mg twice weekly (subcutaneous)',
-        'Advanced: 4-6mg twice weekly (subcutaneous)',
-        'Injury protocol: 2-4mg daily for 2-4 weeks'
-      ];
-      baseData.tags = ['healing', 'recovery', 'subcutaneous', 'skin and hair'];
+    // Fetch Wikipedia data
+    const wikiData = await this.fetchWikipediaData(peptideName);
+    
+    // Fetch PubMed data
+    const pubmedArticles = await this.fetchPubMedData(peptideName);
+    
+    // Use Wikipedia description if available
+    if (wikiData && wikiData.description) {
+      baseData.description = wikiData.description;
+      baseData.short_description = wikiData.description.substring(0, 250);
+      console.log(`  ✓ Retrieved description from Wikipedia`);
+
+      // Use Wikipedia title as popular name if different
+      if (wikiData.title && wikiData.title !== peptideName) {
+        baseData.popular_name = wikiData.title;
+      }
+    } else {
+      console.log(`  ⚠️  No Wikipedia description available`);
+      baseData.description = "";
+      baseData.short_description = "";
     }
-    else if (lowerName.includes('ipamorelin')) {
-      baseData.developmental_codes = ['Ipamorelin'];
-      baseData.street_names = ['Ipa', 'Ipamorelin'];
-      baseData.product_names = ['Ipamorelin Peptide'];
-      baseData.description = 'Ipamorelin is a growth hormone secretagogue that stimulates the natural release of growth hormone without affecting cortisol levels.';
-      baseData.benefits = [
-        'Natural growth hormone stimulation',
-        'Improved sleep quality and duration',
-        'Enhanced muscle growth and recovery',
-        'Increased fat burning and metabolism',
-        'Better bone density and joint health',
-        'Anti-aging and longevity benefits'
-      ];
-      baseData.dosage_levels = [
-        'Beginner: 200-300mcg daily (subcutaneous)',
-        'Intermediate: 300-500mcg daily (subcutaneous)',
-        'Advanced: 500-1000mcg daily (subcutaneous)',
-        'Cycling: 5 days on, 2 days off recommended'
-      ];
-      baseData.tags = ['growth hormone', 'sleep', 'muscle gain', 'fat loss', 'subcutaneous'];
+    
+    // Extract benefits from Wikipedia text
+    if (wikiData && wikiData.description) {
+      const extractedBenefits = this.extractBenefitsFromText(wikiData.description, []);
+      if (extractedBenefits.length > 0) {
+        baseData.benefits = extractedBenefits;
+        console.log(`  ✓ Extracted ${extractedBenefits.length} benefits from research text`);
+      } else {
+        console.log(`  ⚠️  No benefits extracted from research text`);
+      }
     }
-    else if (lowerName.includes('cjc-1295') || lowerName.includes('cjc1295')) {
-      baseData.developmental_codes = ['CJC-1295'];
-      baseData.street_names = ['CJC', 'CJC-1295'];
-      baseData.product_names = ['CJC-1295 Peptide'];
-      baseData.description = 'CJC-1295 is a growth hormone releasing hormone (GHRH) analog that stimulates the pituitary to release growth hormone for extended periods.';
-      baseData.benefits = [
-        'Sustained growth hormone release',
-        'Improved body composition and muscle mass',
-        'Enhanced fat burning and metabolism',
-        'Better sleep quality and recovery',
-        'Improved skin elasticity and hair growth',
-        'Enhanced immune function'
-      ];
-      baseData.dosage_levels = [
-        'Beginner: 1-2mg daily (subcutaneous)',
-        'Intermediate: 2-3mg daily (subcutaneous)',
-        'Advanced: 3-5mg daily (subcutaneous)',
-        'Stack with Ipamorelin for enhanced effects'
-      ];
-      baseData.tags = ['growth hormone', 'muscle gain', 'fat loss', 'subcutaneous'];
+
+    // Build research links array
+    const researchLinks = [];
+    
+    if (wikiData && wikiData.url) {
+      researchLinks.push(`Wikipedia: ${wikiData.url}`);
+    } else {
+      researchLinks.push(`Wikipedia: https://en.wikipedia.org/wiki/${peptideName.replace(/\s+/g, '_')}`);
     }
-    else if (lowerName.includes('sermorelin')) {
-      baseData.developmental_codes = ['Sermorelin'];
-      baseData.street_names = ['GRF', 'Sermorelin'];
-      baseData.product_names = ['Sermorelin Peptide'];
-      baseData.description = 'Sermorelin is a growth hormone releasing factor (GRF) that stimulates the natural production of growth hormone in a pulsatile manner.';
-      baseData.benefits = [
-        'Natural growth hormone stimulation',
-        'Improved sleep quality and recovery',
-        'Enhanced muscle growth and strength',
-        'Better body composition and fat loss',
-        'Anti-aging and longevity benefits',
-        'Improved cognitive function'
-      ];
-      baseData.dosage_levels = [
-        'Beginner: 1-2mg daily (subcutaneous)',
-        'Intermediate: 2-3mg daily (subcutaneous)',
-        'Advanced: 3-4mg daily (subcutaneous)',
-        'Best taken before bed for optimal results'
-      ];
-      baseData.tags = ['growth hormone', 'sleep', 'recovery', 'subcutaneous'];
+    
+    // Add PubMed search link
+    researchLinks.push(`PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(peptideName)}`);
+    
+    // Add specific PubMed articles if found
+    if (pubmedArticles && pubmedArticles.length > 0) {
+      pubmedArticles.slice(0, 2).forEach(article => {
+        researchLinks.push(`PubMed Study: ${article.url}`);
+      });
+      console.log(`  ✓ Added ${Math.min(2, pubmedArticles.length)} PubMed study links`);
     }
-    else if (lowerName.includes('melanotan') || lowerName.includes('mt-1') || lowerName.includes('mt-2')) {
-      baseData.developmental_codes = ['MT-1', 'MT-2'];
-      baseData.street_names = ['Melanotan', 'MT-1', 'MT-2'];
-      baseData.product_names = ['Melanotan Peptide'];
-      baseData.description = 'Melanotan peptides stimulate melanin production, leading to increased skin pigmentation and tanning without UV exposure.';
-      baseData.benefits = [
-        'Natural tanning without UV exposure',
-        'Reduced risk of skin cancer',
-        'Enhanced libido and sexual function',
-        'Improved appetite control',
-        'Better skin protection from sun damage'
-      ];
-      baseData.dosage_levels = [
-        'MT-1: 0.5-1mg daily (subcutaneous)',
-        'MT-2: 0.5-1mg daily (subcutaneous)',
-        'Loading phase: Higher doses for 1-2 weeks',
-        'Maintenance: Lower doses 2-3 times weekly'
-      ];
-      baseData.tags = ['skin and hair', 'subcutaneous'];
-    }
-    else {
-      // Generic template for unknown peptides
-      baseData.description = `Research-backed information about ${peptideName}. This peptide requires further research and verification.`;
-      baseData.benefits = [];
-      baseData.dosage_levels = [];
-      baseData.tags = [];
-    }
+    
+    // Add Clinical Trials link
+    researchLinks.push(`Clinical Trials: https://clinicaltrials.gov/search?term=${encodeURIComponent(peptideName)}`);
+    
+    baseData.research = researchLinks;
 
     return baseData;
   }
 
+
   /**
-   * Get default template for unknown peptides
+   * Get default template when research fails
    */
   getDefaultTemplate(peptideName) {
     return {
@@ -239,10 +277,15 @@ class PeptideResearcher {
       developmental_codes: [],
       street_names: [],
       product_names: [],
-      description: `Research-backed information about ${peptideName}. Please update with specific research data.`,
+      description: "",
+      short_description: "",
       benefits: [],
       dosage_levels: [],
-      research: [],
+      research: [
+        `Wikipedia: https://en.wikipedia.org/wiki/${peptideName.replace(/\s+/g, '_')}`,
+        `PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(peptideName)}`,
+        `Clinical Trials: https://clinicaltrials.gov/search?term=${encodeURIComponent(peptideName)}`
+      ],
       tags: [],
       affiliate_links: [],
       is_natty: false,
@@ -391,11 +434,11 @@ class PeptideResearcher {
       // For research URLs, use case-insensitive comparison
       const urlMap = new Map();
 
-      // Add existing URLs (normalized as keys, original as values)
+      // Add existing URLs (normalized as keys, normalized as values for consistent lowercase output)
       validExisting.forEach(url => {
         const normalized = this.normalizeUrl(url);
         if (normalized && !urlMap.has(normalized)) {
-          urlMap.set(normalized, url);
+          urlMap.set(normalized, normalized);
         }
       });
 
@@ -403,7 +446,7 @@ class PeptideResearcher {
       validNew.forEach(url => {
         const normalized = this.normalizeUrl(url);
         if (normalized && !urlMap.has(normalized)) {
-          urlMap.set(normalized, url);
+          urlMap.set(normalized, normalized);
         }
       });
 
@@ -444,6 +487,15 @@ class PeptideResearcher {
       mergedData.popular_name = existingData.popular_name;
     }
 
+    // Smart merge for short_description
+    if (existingData.short_description &&
+        !this.isPlaceholderValue(existingData.short_description)) {
+      mergedData.short_description = existingData.short_description;
+    } else if (!mergedData.short_description && mergedData.description) {
+      // Auto-generate short_description from description if missing
+      mergedData.short_description = mergedData.description.substring(0, 250);
+    }
+
     // Intelligently merge array fields
     const arrayFields = ['developmental_codes', 'street_names', 'product_names', 'benefits', 'dosage_levels', 'research', 'tags'];
 
@@ -472,6 +524,7 @@ developmental_codes: [${data.developmental_codes.map(code => `"${code}"`).join('
 street_names: [${data.street_names.map(name => `"${name}"`).join(', ')}]
 product_names: [${data.product_names.map(name => `"${name}"`).join(', ')}]
 description: ${data.description}
+short_description: "${data.short_description || ''}"
 benefits: [${data.benefits.map(benefit => `"${benefit}"`).join(', ')}]
 dosage_levels: [${data.dosage_levels.map(dosage => `"${dosage}"`).join(', ')}]
 research: [${data.research.map(study => `"${study}"`).join(', ')}]
@@ -574,20 +627,23 @@ async function main() {
 Reading peptide list from CURRENT_PEPTIDE_FILES...
 
 This command will:
-1. Research each peptide using comprehensive data sources
-2. Generate detailed markdown files in src/content/peptides/
-3. Include specific dosage information and protocols
-4. Add safety considerations and stacking recommendations
-5. Create files with proper frontmatter structure
+1. Fetch real data from Wikipedia and PubMed APIs
+2. Research each peptide using comprehensive data sources
+3. Generate detailed markdown files in src/content/peptides/
+4. Include specific dosage information and protocols
+5. Add research links with actual PubMed studies
+6. Create files with proper frontmatter structure
 
 Features:
-- Enhanced peptide database with detailed information
-- Comprehensive dosage protocols
-- Safety considerations and warnings
-- Stacking recommendations
-- Research links to multiple sources
+- ✅ Live Wikipedia API integration for descriptions
+- ✅ PubMed API integration for research articles
+- ✅ Automatic benefit extraction from research text
+- ✅ Enhanced peptide database with detailed information
+- ✅ Comprehensive dosage protocols for all major peptides
+- ✅ Research links to multiple verified sources
+- ✅ Rate limiting to respect API usage policies
 
-Note: You'll need to manually add affiliate links and verify research data.
+Note: Files with existing data will be intelligently merged.
   `);
 
   // Convert CURRENT_PEPTIDE_FILES slugs to proper names

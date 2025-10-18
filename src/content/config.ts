@@ -10,6 +10,7 @@ const peptides = defineCollection({
     street_names: z.array(z.string()),
     product_names: z.array(z.string()),
     description: z.string(),
+    short_description: z.string(),
     benefits: z.array(z.string()),
     dosage_levels: z.array(z.string()),
     research: z.array(z.string()),

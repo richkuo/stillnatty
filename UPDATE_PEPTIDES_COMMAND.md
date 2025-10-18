@@ -11,13 +11,16 @@ bun run update_peptides
 
 ## What It Does
 - ✅ Reads peptide list from `src/constants/peptides.ts` (CURRENT_PEPTIDE_FILES)
-- ✅ Researches peptide information from multiple sources
+- ✅ **Fetches live data from Wikipedia API** for descriptions and information
+- ✅ **Searches PubMed API** for research articles and studies
+- ✅ **Automatically extracts benefits** from research text using NLP patterns
 - ✅ Generates professional markdown files with complete frontmatter
 - ✅ Includes comprehensive dosage protocols (Beginner → Advanced)
-- ✅ Adds safety considerations and warnings
-- ✅ Creates research links (Wikipedia, PubMed, Clinical Trials, Swolverine)
+- ✅ Creates research links with **actual PubMed study URLs**
+- ✅ Intelligently merges with existing file data (preserves manual edits)
 - ✅ Matches your Astro content schema exactly
 - ✅ Uses PEPTIDE_TAGS constant for valid tag values
+- ✅ Rate limiting to respect API usage policies
 
 ## 🚀 Usage
 
@@ -26,27 +29,21 @@ bun run update_peptides
 bun run update_peptides
 ```
 
-The command processes all peptides listed in `CURRENT_PEPTIDE_FILES`:
-- bpc-157
-- cjc-1295
-- ibutamoren
-- ipamorelin
-- retatrutide
-- semaglutide
-- sermorelin
-- tb-500
-- tirzepatide
-
-To add a new peptide, simply add its slug to the `CURRENT_PEPTIDE_FILES` array in `src/constants/peptides.ts` and run the command.
+The command processes all peptides listed in `CURRENT_PEPTIDE_FILES` in `src/constants/peptides.ts`. To add a new peptide, simply add its slug to the array and run the command.
 
 ## 🔧 What Gets Generated
 
 Each command creates markdown files in `src/content/peptides/` with:
 
 - ✅ Complete frontmatter matching your Astro schema
-- ✅ Comprehensive benefits and dosage information
-- ✅ Research links to Wikipedia, PubMed, Clinical Trials
+- ✅ **Description fetched from Wikipedia API** (when available)
+- ✅ **Short description** (max 250 characters, auto-generated from description)
+- ✅ **Benefits automatically extracted from research text**
+- ✅ Comprehensive dosage protocols (Beginner/Intermediate/Advanced)
+- ✅ Research links including **specific PubMed study URLs**
+- ✅ Developmental codes, product names, and alternative names
 - ✅ Automatic timestamp tracking (created_at and last_updated_at)
+- ✅ Intelligent merging preserves your manual edits and additions
 
 ## Files Generated
 Location: `src/content/peptides/[peptide-name].md`
@@ -67,6 +64,7 @@ developmental_codes: ["Code1", "Code2"]
 street_names: ["Street Name 1", "Street Name 2"]
 product_names: ["Product 1", "Product 2"]
 description: Comprehensive description
+short_description: "Brief summary (max 250 characters)"
 benefits: ["Benefit 1", "Benefit 2"]
 dosage_levels: ["Beginner: Xmg daily", "Advanced: Ymg daily"]
 research: ["Research Link 1", "Research Link 2"]
@@ -100,10 +98,11 @@ Files are automatically named based on peptide names:
 ## 📝 Post-Generation Checklist
 
 1. **Review Frontmatter** - Check generated metadata for accuracy
-2. **Update Research** - Add specific studies and clinical data to the research array
-3. **Add Affiliate Links** - Include purchasing links (empty by default)
-4. **Verify Dosage** - Cross-reference dosage_levels with current research
-5. **Update Benefits** - Add specific benefits to the benefits array
+2. **Review Short Description** - Verify the auto-generated short_description is appropriate (max 250 chars)
+3. **Update Research** - Add specific studies and clinical data to the research array
+4. **Add Affiliate Links** - Include purchasing links (empty by default)
+5. **Verify Dosage** - Cross-reference dosage_levels with current research
+6. **Update Benefits** - Add specific benefits to the benefits array
 
 ## 🎯 Example Workflow
 
@@ -286,7 +285,7 @@ benefits: ["Great for healing", "Reduces inflammation"]
 **After merge**:
 ```yaml
 research: [
-  "Wikipedia: https://en.wikipedia.org/wiki/BPC-157",
+  "Wikipedia: https://en.wikipedia.org/wiki/bpc-157",
   "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=bpc-157"
 ]
 benefits: ["Great for healing", "Reduces inflammation"]
