@@ -523,7 +523,7 @@ popular_name: "${data.popular_name}"
 developmental_codes: [${data.developmental_codes.map(code => `"${code}"`).join(', ')}]
 street_names: [${data.street_names.map(name => `"${name}"`).join(', ')}]
 product_names: [${data.product_names.map(name => `"${name}"`).join(', ')}]
-description: ${data.description}
+description: "${data.description}"
 short_description: "${data.short_description || ''}"
 benefits: [${data.benefits.map(benefit => `"${benefit}"`).join(', ')}]
 dosage_levels: [${data.dosage_levels.map(dosage => `"${dosage}"`).join(', ')}]
