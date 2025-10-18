@@ -6,7 +6,6 @@ export const CURRENT_PEPTIDE_FILES = [
   'retatrutide',
   'semaglutide',
   'sermorelin',
-  'tb-500',
   'tirzepatide',
 ] as const;
 
