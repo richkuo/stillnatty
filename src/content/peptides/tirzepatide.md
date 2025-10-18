@@ -13,5 +13,5 @@ tags: ["fat loss", "subcutaneous"]
 affiliate_links: []
 is_natty: false
 created_at: 2025-10-17T08:26:21.286Z
-last_updated_at: 2025-10-18T05:18:30.260Z
+last_updated_at: 2025-10-18T05:32:37.768Z
 ---

@@ -13,5 +13,5 @@ tags: ["growth hormone", "sleep", "muscle gain", "fat loss", "subcutaneous"]
 affiliate_links: []
 is_natty: false
 created_at: 2025-10-17T08:25:41.104Z
-last_updated_at: 2025-10-18T05:18:21.249Z
+last_updated_at: 2025-10-18T05:32:30.454Z
 ---

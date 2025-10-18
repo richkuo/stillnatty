@@ -29,6 +29,8 @@ bun run update_peptides
 bun run update_peptides
 ```
 
+**⚠️ Network Access Required:** This command fetches real-time data from Wikipedia and PubMed APIs. When running via Cursor command (`/update_peptides`), the AI assistant will automatically handle network permissions if needed.
+
 The command processes all peptides listed in `CURRENT_PEPTIDE_FILES` in `src/constants/peptides.ts`. To add a new peptide, simply add its slug to the array and run the command.
 
 ## 🔧 What Gets Generated
@@ -299,6 +301,26 @@ benefits: ["Great for healing", "Reduces inflammation"]
 - No placeholder text present
 
 ## Troubleshooting
+
+### Network Connection Errors
+
+If you see errors like:
+- `Unable to connect. Is the computer able to access the url?`
+- `Was there a typo in the url or port?`
+- `Error fetching Wikipedia data`
+- `Error fetching PubMed data`
+
+**Solution:** The script needs network access to fetch data from Wikipedia and PubMed APIs.
+
+**When using Cursor command (`/update_peptides`):**
+- The AI assistant will automatically detect network errors
+- It will re-run the command with network permissions enabled
+- No manual intervention needed
+
+**When using direct command (`bun run update_peptides`):**
+- Network access is automatically available
+- If errors persist, check your internet connection
+- Verify that Wikipedia and PubMed are accessible from your network
 
 ### Research Data Missing
 For unknown peptides, the system will generate a template with placeholder data. You'll need to manually research and update the information.
