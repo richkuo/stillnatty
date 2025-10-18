@@ -8,10 +8,10 @@ description: Ibutamoren is a potent, long-acting, orally-active, selective, and 
 short_description: "Orally-active ghrelin receptor agonist that increases GH and IGF-1 levels for enhanced muscle growth, better sleep, and improved recovery."
 benefits: ["Increased growth hormone and IGF-1 levels", "Enhanced muscle growth and strength", "Improved bone density", "Better sleep quality and duration", "Faster recovery and healing", "Improved skin", "hair", "and nail quality", "Increased appetite", "Stimulates growth hormone release"]
 dosage_levels: ["Beginner: 10-15mg daily (oral)", "Intermediate: 15-20mg daily (oral)", "Advanced: 20-25mg daily (oral)", "Best taken before bed for enhanced sleep benefits"]
-research: ["Wikipedia: https://en.wikipedia.org/wiki/Ibutamoren", "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=Ibutamoren", "Clinical Trials: https://clinicaltrials.gov/search?term=Ibutamoren", "PubMed Study: https://pubmed.ncbi.nlm.nih.gov/40882886/", "PubMed Study: https://pubmed.ncbi.nlm.nih.gov/40551438/"]
+research: ["wikipedia: https://en.wikipedia.org/wiki/ibutamoren", "pubmed: https://pubmed.ncbi.nlm.nih.gov/?term=ibutamoren", "clinical trials: https://clinicaltrials.gov/search?term=ibutamoren", "pubmed study: https://pubmed.ncbi.nlm.nih.gov/40882886/", "pubmed study: https://pubmed.ncbi.nlm.nih.gov/40551438/"]
 tags: ["growth hormone", "muscle gain", "oral", "sleep"]
 affiliate_links: []
 is_natty: false
 created_at: 2025-10-17T08:26:21.285Z
-last_updated_at: 2025-10-18T04:44:47.914Z
+last_updated_at: 2025-10-18T05:18:19.470Z
 ---

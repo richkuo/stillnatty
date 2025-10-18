@@ -8,10 +8,10 @@ description: Retatrutide (LY-3437943) is an experimental drug for obesity develo
 short_description: "Experimental triple agonist achieving exceptional weight loss (up to 24.2% in trials) with powerful appetite suppression and metabolic benefits."
 benefits: ["Exceptional weight loss potential (>20% body weight)", "Powerful appetite suppression", "Enhanced metabolic rate and energy expenditure", "Improved glucose and lipid metabolism", "Reduced cardiovascular risk", "Better insulin sensitivity", "Potential for metabolic disease reversal", "Improves cognitive function"]
 dosage_levels: ["Starting dose: 0.5-1mg weekly (subcutaneous)", "Titration: 2-4mg weekly", "Therapeutic: 4-8mg weekly", "Advanced: 8-12mg weekly (clinical trial dosing)"]
-research: ["Wikipedia: https://en.wikipedia.org/wiki/Retatrutide", "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=Retatrutide", "Clinical Trials: https://clinicaltrials.gov/search?term=Retatrutide", "PubMed Study: https://pubmed.ncbi.nlm.nih.gov/41090431/", "PubMed Study: https://pubmed.ncbi.nlm.nih.gov/41056349/"]
+research: ["wikipedia: https://en.wikipedia.org/wiki/retatrutide", "pubmed: https://pubmed.ncbi.nlm.nih.gov/?term=retatrutide", "clinical trials: https://clinicaltrials.gov/search?term=retatrutide", "pubmed study: https://pubmed.ncbi.nlm.nih.gov/41090431/", "pubmed study: https://pubmed.ncbi.nlm.nih.gov/41056349/"]
 tags: ["fat loss", "subcutaneous"]
 affiliate_links: []
 is_natty: false
 created_at: 2025-10-17T08:26:21.285Z
-last_updated_at: 2025-10-18T04:44:51.473Z
+last_updated_at: 2025-10-18T05:18:23.012Z
 ---
