@@ -39,9 +39,19 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { file } = Astro.props as Props;
 const { default: Content, frontmatter } = file as { default: any; frontmatter: Frontmatter };
+
+// Build dynamic description
+const pageTitle = `${frontmatter.title || 'Peptide'} - Still Natty`;
+const pageDescription = frontmatter.description || frontmatter.short_description || `Learn about ${frontmatter.title}, including benefits, dosages, and scientific research.`;
 ---
 
-<Layout title={frontmatter.title || 'Peptide'}>
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  type="article"
+  publishedTime={frontmatter.created_at}
+  modifiedTime={frontmatter.last_updated_at}
+>
   <div class="hero min-h-screen">
     <div class="hero-content w-full max-w-4xl">
       <div class="w-full">

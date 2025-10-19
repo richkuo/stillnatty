@@ -2,12 +2,27 @@
 import '../styles/global.css'
 import background from '../assets/background.svg';
 import Header from '../components/Header.astro';
+import SEO from '../components/SEO.astro';
 
 interface Props {
   title?: string;
+  description?: string;
+  type?: 'website' | 'article';
+  image?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
 }
 
-const { title = 'Still Natty' } = Astro.props;
+const {
+  title = 'Still Natty',
+  description = 'Your guide to peptides and natural performance optimization',
+  type = 'website',
+  image,
+  publishedTime,
+  modifiedTime,
+  author
+} = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -16,10 +31,18 @@ const { title = 'Still Natty' } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <SEO
+      title={title}
+      description={description}
+      type={type}
+      image={image}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      author={author}
+    />
   </head>
   <body>
-    <img src={background.src} alt="" class="fixed inset-0 w-full h-full -z-10 blur-[100px]" />
+    <img src={background.src} alt="Abstract gradient background" class="fixed inset-0 w-full h-full -z-10 blur-[100px]" />
     <Header />
     <slot />
   </body>
