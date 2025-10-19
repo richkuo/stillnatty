@@ -12,9 +12,10 @@ const peptides = await getCollection('peptides');
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
           {peptides.map((peptide) => (
-            <a href={`/${peptide.slug}`} class="card card-compact bg-base-100 shadow-xl hover:shadow-2xl transition-all">
+            <a href={`/${peptide.slug}`} class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all">
               <div class="card-body">
-                <h2 class="card-title text-primary uppercase">{peptide.data.title}</h2>
+                <h2 class="card-title text-primary uppercase">{peptide.data.popular_name}</h2>
+                <p class="text-sm opacity-70">{peptide.data.title}</p>
                 <p>{peptide.data.short_description}</p>
                 <div class="card-actions justify-end">
                   <span class="badge badge-primary badge-outline">Learn more →</span>

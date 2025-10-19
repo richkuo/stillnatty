@@ -1,6 +1,6 @@
 ---
 title: vosilasarm
-popular_name: "Vosilasarm (RAD140)"
+popular_name: "RAD140"
 developmental_codes: ["RAD140", "EP0062", "Vosilasarm"]
 street_names: ["RAD140", "Testolone", "Testalone"]
 product_names: ["Vosilasarm", "EP0062"]
@@ -9,7 +9,7 @@ short_description: "SARM (RAD140) for breast cancer trials. Tissue-selective AR 
 benefits: ["High androgen receptor affinity (Ki = 7 nM)", "Tissue-selective: anabolic in muscle/bone, anti-proliferative in breast", "Clinical benefit in 21% of heavily pre-treated breast cancer patients", "58% stable disease rate in breast cancer trials", "26% showed marked CA15-3 tumor marker suppression", "90% as anabolic as testosterone in preclinical studies", ">10% weight gain in 28 days in primate models (0.1mg/kg)", "Oral administration (no injections)", "Good selectivity over other steroid hormone receptors", "Reformulated EP0062 has improved bioavailability"]
 dosage_levels: ["Clinical trials (breast cancer): 50-150mg daily oral", "Maximum tolerated dose: 100mg daily", "Phase 2 recommended dose: 10mg twice daily (20mg total)", "Black market use (not recommended): 5-30mg daily", "Note: Non-medical use is illegal and dangerous", "Clinical dosing should only be under medical supervision", "Liver function monitoring required during use"]
 research: ["wikipedia: https://en.wikipedia.org/wiki/Vosilasarm", "pubmed: https://pubmed.ncbi.nlm.nih.gov/?term=vosilasarm", "clinical trials: https://clinicaltrials.gov/search?term=vosilasarm", "breast cancer phase 1/2 trial: https://clinicaltrials.gov/study/NCT05573126", "liver toxicity case reports: https://pmc.ncbi.nlm.nih.gov/articles/PMC7049679/", "negative muscle effects in mice: https://pubmed.ncbi.nlm.nih.gov/37758180/", "mechanism and preclinical data: https://pubs.acs.org/doi/abs/10.1021/ml1002508", "breast cancer mechanism: https://aacrjournals.org/clincancerres/article/23/24/7608/79963/"]
-tags: ["SARM", "oral", "muscle", "breast cancer", "liver toxicity", "testosterone suppression"]
+tags: ["sarm", "muscle gain", "breast cancer", "oral"]
 affiliate_links: []
 is_natty: false
 created_at: 2025-10-19T08:00:00.000Z
