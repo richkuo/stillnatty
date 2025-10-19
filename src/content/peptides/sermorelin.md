@@ -11,7 +11,7 @@ dosage_levels: ["Beginner: 1-2mg daily (subcutaneous)", "Intermediate: 2-3mg dai
 research: ["wikipedia: https://en.wikipedia.org/wiki/sermorelin", "pubmed: https://pubmed.ncbi.nlm.nih.gov/?term=sermorelin", "clinical trials: https://clinicaltrials.gov/search?term=sermorelin", "pubmed study: https://pubmed.ncbi.nlm.nih.gov/40244089/", "pubmed study: https://pubmed.ncbi.nlm.nih.gov/39456984/"]
 tags: ["growth hormone", "sleep", "recovery", "subcutaneous"]
 affiliate_links: []
-is_natty: false
+is_natty: true
 created_at: 2025-10-17T08:25:41.104Z
 last_updated_at: 2025-10-19T03:36:05.969Z
 ---

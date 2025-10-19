@@ -14,7 +14,7 @@ const peptides = await getCollection('peptides');
           {peptides.map((peptide) => (
             <a href={`/${peptide.slug}`} class="card card-compact bg-base-100 shadow-xl hover:shadow-2xl transition-all">
               <div class="card-body">
-                <h2 class="card-title text-primary">{peptide.data.title}</h2>
+                <h2 class="card-title text-primary uppercase">{peptide.data.title}</h2>
                 <p>{peptide.data.short_description}</p>
                 <div class="card-actions justify-end">
                   <span class="badge badge-primary badge-outline">Learn more →</span>
