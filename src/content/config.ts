@@ -13,7 +13,10 @@ const peptides = defineCollection({
     short_description: z.string(),
     benefits: z.array(z.string()),
     dosage_levels: z.array(z.string()),
-    research: z.array(z.string()),
+    research: z.array(z.object({
+      summary: z.string(),
+      url: z.string(),
+    })),
     tags: z.array(z.enum(PEPTIDE_TAGS)),
     affiliate_links: z.array(z.string()),
     is_natty: z.boolean().default(true),

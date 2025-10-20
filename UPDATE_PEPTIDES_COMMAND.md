@@ -69,7 +69,7 @@ description: Comprehensive description
 short_description: "Brief summary (max 250 characters)"
 benefits: ["Benefit 1", "Benefit 2"]
 dosage_levels: ["Beginner: Xmg daily", "Advanced: Ymg daily"]
-research: ["Research Link 1", "Research Link 2"]
+research: [{ summary: "Wikipedia article", url: "https://en.wikipedia.org/wiki/peptide-name" }, { summary: "PubMed database search", url: "https://pubmed.ncbi.nlm.nih.gov/?term=peptide-name" }]
 tags: ["tag1", "tag2"]
 affiliate_links: []
 is_natty: false
@@ -198,13 +198,13 @@ The update system uses intelligent merging to ensure data quality and prevent du
 **Research URLs** - Case-insensitive comparison prevents duplicates:
 ```
 Before merge:
-- "Wikipedia: https://en.wikipedia.org/wiki/BPC-157"
-- "Wikipedia: https://en.wikipedia.org/wiki/bpc-157"
+- { summary: "Wikipedia article", url: "https://en.wikipedia.org/wiki/BPC-157" }
+- { summary: "Wikipedia article", url: "https://en.wikipedia.org/wiki/bpc-157" }
 (2 items)
 
 After merge:
-- "Wikipedia: https://en.wikipedia.org/wiki/BPC-157"
-(1 item - lowercase duplicate removed)
+- { summary: "Wikipedia article", url: "https://en.wikipedia.org/wiki/bpc-157" }
+(1 item - lowercase duplicate removed based on URL)
 ```
 
 **Other Arrays** - Exact string matching removes duplicates in:
@@ -269,8 +269,8 @@ The merge logic uses these validation methods:
 **Starting state** (bpc-157.md):
 ```yaml
 research: [
-  "Wikipedia: https://en.wikipedia.org/wiki/BPC-157",
-  "Wikipedia: https://en.wikipedia.org/wiki/bpc-157"
+  { summary: "Wikipedia article", url: "https://en.wikipedia.org/wiki/BPC-157" },
+  { summary: "Wikipedia article", url: "https://en.wikipedia.org/wiki/bpc-157" }
 ]
 benefits: ["Great for healing"]
 ```
@@ -278,8 +278,8 @@ benefits: ["Great for healing"]
 **New research data**:
 ```yaml
 research: [
-  "Wikipedia: https://en.wikipedia.org/wiki/bpc-157",
-  "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=bpc-157"
+  { summary: "Wikipedia article", url: "https://en.wikipedia.org/wiki/bpc-157" },
+  { summary: "PubMed database search", url: "https://pubmed.ncbi.nlm.nih.gov/?term=bpc-157" }
 ]
 benefits: ["Great for healing", "Reduces inflammation"]
 ```
@@ -287,15 +287,15 @@ benefits: ["Great for healing", "Reduces inflammation"]
 **After merge**:
 ```yaml
 research: [
-  "Wikipedia: https://en.wikipedia.org/wiki/bpc-157",
-  "PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=bpc-157"
+  { summary: "Wikipedia article", url: "https://en.wikipedia.org/wiki/bpc-157" },
+  { summary: "PubMed database search", url: "https://pubmed.ncbi.nlm.nih.gov/?term=bpc-157" }
 ]
 benefits: ["Great for healing", "Reduces inflammation"]
 ```
 
 **What happened:**
-- Duplicate Wikipedia URL removed (case-insensitive)
-- New PubMed URL added
+- Duplicate Wikipedia URL removed (case-insensitive URL comparison)
+- New PubMed research item added
 - New benefit "Reduces inflammation" added
 - Existing benefit preserved
 - No placeholder text present

@@ -238,29 +238,29 @@ class PeptideResearcher {
       }
     }
 
-    // Build research links array
+    // Build research links array as objects
     const researchLinks = [];
-    
+
     if (wikiData && wikiData.url) {
-      researchLinks.push(`Wikipedia: ${wikiData.url}`);
+      researchLinks.push({ summary: 'Wikipedia article', url: wikiData.url });
     } else {
-      researchLinks.push(`Wikipedia: https://en.wikipedia.org/wiki/${peptideName.replace(/\s+/g, '_')}`);
+      researchLinks.push({ summary: 'Wikipedia article', url: `https://en.wikipedia.org/wiki/${peptideName.replace(/\s+/g, '_')}` });
     }
-    
+
     // Add PubMed search link
-    researchLinks.push(`PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(peptideName)}`);
-    
+    researchLinks.push({ summary: 'PubMed database search', url: `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(peptideName)}` });
+
     // Add specific PubMed articles if found
     if (pubmedArticles && pubmedArticles.length > 0) {
       pubmedArticles.slice(0, 2).forEach(article => {
-        researchLinks.push(`PubMed Study: ${article.url}`);
+        researchLinks.push({ summary: article.title || 'PubMed study', url: article.url });
       });
       console.log(`  ✓ Added ${Math.min(2, pubmedArticles.length)} PubMed study links`);
     }
-    
+
     // Add Clinical Trials link
-    researchLinks.push(`Clinical Trials: https://clinicaltrials.gov/search?term=${encodeURIComponent(peptideName)}`);
-    
+    researchLinks.push({ summary: 'Clinical trials search', url: `https://clinicaltrials.gov/search?term=${encodeURIComponent(peptideName)}` });
+
     baseData.research = researchLinks;
 
     return baseData;
@@ -282,9 +282,9 @@ class PeptideResearcher {
       benefits: [],
       dosage_levels: [],
       research: [
-        `Wikipedia: https://en.wikipedia.org/wiki/${peptideName.replace(/\s+/g, '_')}`,
-        `PubMed: https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(peptideName)}`,
-        `Clinical Trials: https://clinicaltrials.gov/search?term=${encodeURIComponent(peptideName)}`
+        { summary: 'Wikipedia article', url: `https://en.wikipedia.org/wiki/${peptideName.replace(/\s+/g, '_')}` },
+        { summary: 'PubMed database search', url: `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(peptideName)}` },
+        { summary: 'Clinical trials search', url: `https://clinicaltrials.gov/search?term=${encodeURIComponent(peptideName)}` }
       ],
       tags: [],
       affiliate_links: [],
@@ -402,10 +402,16 @@ class PeptideResearcher {
 
   /**
    * Normalize URL for comparison (lowercase, trim whitespace)
+   * Handles both string URLs and research objects
    */
-  normalizeUrl(url) {
-    if (typeof url !== 'string') return '';
-    return url.trim().toLowerCase();
+  normalizeUrl(urlOrObject) {
+    if (typeof urlOrObject === 'string') {
+      return urlOrObject.trim().toLowerCase();
+    }
+    if (typeof urlOrObject === 'object' && urlOrObject.url) {
+      return urlOrObject.url.trim().toLowerCase();
+    }
+    return '';
   }
 
   /**
@@ -431,22 +437,27 @@ class PeptideResearcher {
 
     // Both have data - merge intelligently
     if (fieldName === 'research') {
-      // For research URLs, use case-insensitive comparison
+      // For research objects, use case-insensitive URL comparison
       const urlMap = new Map();
 
-      // Add existing URLs (normalized as keys, normalized as values for consistent lowercase output)
-      validExisting.forEach(url => {
-        const normalized = this.normalizeUrl(url);
+      // Add existing research items
+      validExisting.forEach(item => {
+        const normalized = this.normalizeUrl(item);
         if (normalized && !urlMap.has(normalized)) {
-          urlMap.set(normalized, normalized);
+          // Store the object if it's an object, otherwise convert string to object
+          if (typeof item === 'object' && item.url) {
+            urlMap.set(normalized, item);
+          }
         }
       });
 
-      // Add new URLs only if not already present (case-insensitive)
-      validNew.forEach(url => {
-        const normalized = this.normalizeUrl(url);
+      // Add new research items only if URL not already present (case-insensitive)
+      validNew.forEach(item => {
+        const normalized = this.normalizeUrl(item);
         if (normalized && !urlMap.has(normalized)) {
-          urlMap.set(normalized, normalized);
+          if (typeof item === 'object' && item.url) {
+            urlMap.set(normalized, item);
+          }
         }
       });
 
@@ -527,7 +538,7 @@ description: "${data.description}"
 short_description: "${data.short_description || ''}"
 benefits: [${data.benefits.map(benefit => `"${benefit}"`).join(', ')}]
 dosage_levels: [${data.dosage_levels.map(dosage => `"${dosage}"`).join(', ')}]
-research: [${data.research.map(study => `"${study}"`).join(', ')}]
+research: [${data.research.map(item => `{ summary: "${item.summary}", url: "${item.url}" }`).join(', ')}]
 tags: [${data.tags.map(tag => `"${tag}"`).join(', ')}]
 affiliate_links: [${data.affiliate_links.map(link => `"${link}"`).join(', ')}]
 is_natty: ${data.is_natty}
