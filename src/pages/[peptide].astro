@@ -78,14 +78,10 @@ const pageDescription = frontmatter.description || frontmatter.short_description
             )}
 
             {frontmatter.what_it_does && (
-              <div class="hero bg-primary text-primary-content rounded-box">
-                <div class="hero-content w-full">
-                  <div class="max-w-full w-full">
-                    <div>
-                      <h3 class="text-2xl font-bold mb-4">What It Does</h3>
-                      <p class="text-lg">{frontmatter.what_it_does}</p>
-                    </div>
-                  </div>
+              <div class="card bg-base-200 w-full">
+                <div class="card-body">
+                  <h3 class="card-title">What It Does</h3>
+                  <p>{frontmatter.what_it_does}</p>
                 </div>
               </div>
             )}
@@ -108,21 +104,21 @@ const pageDescription = frontmatter.description || frontmatter.short_description
               </div>
             )}
 
-            {frontmatter.application_methods && frontmatter.application_methods.length > 0 && (
-              <div class="card bg-base-200">
-                <div class="card-body card-compact">
-                  <h3 class="card-title text-sm">Application Methods</h3>
-                  <ul class="list-disc list-inside">
-                    {frontmatter.application_methods.map((method) => (
-                      <li>{method}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {frontmatter.popular_name && (
+              {frontmatter.application_methods && frontmatter.application_methods.length > 0 && (
+                <div class="card bg-base-200">
+                  <div class="card-body card-compact">
+                    <h3 class="card-title text-sm">Application Methods</h3>
+                    <ul class="list-disc list-inside">
+                      {frontmatter.application_methods.map((method) => (
+                        <li>{method}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+{frontmatter.popular_name && (
                 <div class="card bg-base-200">
                   <div class="card-body card-compact">
                     <h3 class="card-title text-sm">Popular Name</h3>
