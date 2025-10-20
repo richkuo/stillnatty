@@ -2,6 +2,7 @@
 import '../styles/global.css'
 import background from '../assets/background.svg';
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import SEO from '../components/SEO.astro';
 
 interface Props {
@@ -45,5 +46,6 @@ const {
     <img src={background.src} alt="Abstract gradient background" class="fixed inset-0 w-full h-full -z-10 blur-[100px]" />
     <Header />
     <slot />
+    <Footer />
   </body>
 </html>
