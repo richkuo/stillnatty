@@ -199,6 +199,8 @@ class PeptideResearcher {
       short_description: '',
       benefits: [],
       dosage_levels: [],
+      application_methods: [],
+      what_it_does: '',
       research: [],
       tags: [],
       affiliate_links: [],
@@ -261,6 +263,9 @@ class PeptideResearcher {
     // Add Clinical Trials link
     researchLinks.push({ summary: 'Clinical trials search', url: `https://clinicaltrials.gov/search?term=${encodeURIComponent(peptideName)}` });
 
+    // Add Examine.com link
+    researchLinks.push({ summary: 'Examine.com research', url: `https://examine.com/search/?q=${encodeURIComponent(peptideName)}` });
+
     baseData.research = researchLinks;
 
     return baseData;
@@ -281,10 +286,13 @@ class PeptideResearcher {
       short_description: "",
       benefits: [],
       dosage_levels: [],
+      application_methods: [],
+      what_it_does: "",
       research: [
         { summary: 'Wikipedia article', url: `https://en.wikipedia.org/wiki/${peptideName.replace(/\s+/g, '_')}` },
         { summary: 'PubMed database search', url: `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(peptideName)}` },
-        { summary: 'Clinical trials search', url: `https://clinicaltrials.gov/search?term=${encodeURIComponent(peptideName)}` }
+        { summary: 'Clinical trials search', url: `https://clinicaltrials.gov/search?term=${encodeURIComponent(peptideName)}` },
+        { summary: 'Examine.com research', url: `https://examine.com/search/?q=${encodeURIComponent(peptideName)}` }
       ],
       tags: [],
       affiliate_links: [],
@@ -507,8 +515,18 @@ class PeptideResearcher {
       mergedData.short_description = mergedData.description.substring(0, 250);
     }
 
+    // Smart merge for what_it_does
+    if (existingData.what_it_does &&
+        !this.isPlaceholderValue(existingData.what_it_does)) {
+      mergedData.what_it_does = existingData.what_it_does;
+    } else if (newData.what_it_does && !this.isPlaceholderValue(newData.what_it_does)) {
+      mergedData.what_it_does = newData.what_it_does;
+    } else {
+      mergedData.what_it_does = mergedData.what_it_does || '';
+    }
+
     // Intelligently merge array fields
-    const arrayFields = ['developmental_codes', 'street_names', 'product_names', 'benefits', 'dosage_levels', 'research', 'tags'];
+    const arrayFields = ['developmental_codes', 'street_names', 'product_names', 'benefits', 'dosage_levels', 'application_methods', 'research', 'tags'];
 
     for (const field of arrayFields) {
       mergedData[field] = this.mergeArraysIntelligently(
@@ -538,6 +556,8 @@ description: "${data.description}"
 short_description: "${data.short_description || ''}"
 benefits: [${data.benefits.map(benefit => `"${benefit}"`).join(', ')}]
 dosage_levels: [${data.dosage_levels.map(dosage => `"${dosage}"`).join(', ')}]
+application_methods: [${data.application_methods.map(method => `"${method}"`).join(', ')}]
+what_it_does: "${data.what_it_does || ''}"
 research: [${data.research.map(item => `{ summary: "${item.summary}", url: "${item.url}" }`).join(', ')}]
 tags: [${data.tags.map(tag => `"${tag}"`).join(', ')}]
 affiliate_links: [${data.affiliate_links.map(link => `"${link}"`).join(', ')}]

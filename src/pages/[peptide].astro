@@ -12,6 +12,8 @@ interface Frontmatter {
   short_description?: string;
   benefits?: string[];
   dosage_levels?: string[];
+  application_methods?: string[];
+  what_it_does?: string;
   research?: Array<{ summary: string; url: string }>;
   tags?: string[];
   affiliate_links?: string[];
@@ -75,22 +77,46 @@ const pageDescription = frontmatter.description || frontmatter.short_description
               </div>
             )}
 
-            {frontmatter.description && (
-              <div class="hero bg-base-200 rounded-box">
+            {frontmatter.what_it_does && (
+              <div class="hero bg-primary text-primary-content rounded-box">
                 <div class="hero-content w-full">
-                  <div class="max-w-full">
-                    <div class="collapse collapse-arrow">
-                      <input type="checkbox" />
-                      <div class="collapse-title">
-                        <h3 class="card-title">Description (expand)</h3>
-                      </div>
-                      <div class="collapse-content">
-                        {frontmatter.description.split(/(?<=[.!?])\s+/).map((sentence) => (
-                          <p class="text-base mb-2">{sentence}</p>
-                        ))}
-                      </div>
+                  <div class="max-w-full w-full">
+                    <div>
+                      <h3 class="text-2xl font-bold mb-4">What It Does</h3>
+                      <p class="text-lg">{frontmatter.what_it_does}</p>
                     </div>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {frontmatter.description && (
+              <div class="card bg-base-200 w-full">
+                <div class="card-body">
+                  <div class="collapse collapse-arrow">
+                    <input type="checkbox" />
+                    <div class="collapse-title">
+                      <h3 class="card-title">Full Description (read more)</h3>
+                    </div>
+                    <div class="collapse-content">
+                      {frontmatter.description.split(/(?<=[.!?])\s+/).map((sentence) => (
+                        <p class="text-base mb-2">{sentence}</p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {frontmatter.application_methods && frontmatter.application_methods.length > 0 && (
+              <div class="card bg-base-200">
+                <div class="card-body card-compact">
+                  <h3 class="card-title text-sm">Application Methods</h3>
+                  <ul class="list-disc list-inside">
+                    {frontmatter.application_methods.map((method) => (
+                      <li>{method}</li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             )}
