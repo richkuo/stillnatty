@@ -12,7 +12,7 @@ interface Frontmatter {
   short_description?: string;
   benefits?: string[];
   dosage_levels?: string[];
-  research?: string[];
+  research?: Array<{ summary: string; url: string }>;
   tags?: string[];
   affiliate_links?: string[];
   is_natty?: boolean;
@@ -82,10 +82,12 @@ const pageDescription = frontmatter.description || frontmatter.short_description
                     <div class="collapse collapse-arrow">
                       <input type="checkbox" />
                       <div class="collapse-title">
-                        <h3 class="card-title">Description</h3>
+                        <h3 class="card-title">Description (expand)</h3>
                       </div>
                       <div class="collapse-content">
-                        <p class="text-base">{frontmatter.description}</p>
+                        {frontmatter.description.split(/(?<=[.!?])\s+/).map((sentence) => (
+                          <p class="text-base mb-2">{sentence}</p>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -180,7 +182,9 @@ const pageDescription = frontmatter.description || frontmatter.short_description
                     <h3 class="card-title text-sm">Research</h3>
                     <ul class="list-disc list-inside">
                       {frontmatter.research.map((item) => (
-                        <li>{item}</li>
+                        <li>
+                          <a href={item.url} class="link link-primary" target="_blank" rel="noopener noreferrer">{item.summary}</a>
+                        </li>
                       ))}
                     </ul>
                   </div>
