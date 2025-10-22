@@ -193,9 +193,8 @@ class PeptideResearcher {
       title: peptideName,
       popular_name: peptideName,
       developmental_codes: [],
-      street_names: [],
       product_names: [],
-      description: '',
+      full_description: '',
       short_description: '',
       benefits: [],
       dosage_levels: [],
@@ -215,7 +214,7 @@ class PeptideResearcher {
     
     // Use Wikipedia description if available
     if (wikiData && wikiData.description) {
-      baseData.description = wikiData.description;
+      baseData.full_description = wikiData.description;
       baseData.short_description = wikiData.description.substring(0, 250);
       console.log(`  ✓ Retrieved description from Wikipedia`);
 
@@ -225,7 +224,7 @@ class PeptideResearcher {
       }
     } else {
       console.log(`  ⚠️  No Wikipedia description available`);
-      baseData.description = "";
+      baseData.full_description = "";
       baseData.short_description = "";
     }
     
@@ -280,9 +279,8 @@ class PeptideResearcher {
       title: peptideName,
       popular_name: peptideName,
       developmental_codes: [],
-      street_names: [],
       product_names: [],
-      description: "",
+      full_description: "",
       short_description: "",
       benefits: [],
       dosage_levels: [],
@@ -494,10 +492,10 @@ class PeptideResearcher {
 
     // Smart merge for string fields
     // Prefer existing data if new data is generic/placeholder
-    if (existingData.description &&
-        !this.isPlaceholderValue(existingData.description) &&
-        (this.isPlaceholderValue(newData.description) || !newData.description)) {
-      mergedData.description = existingData.description;
+    if (existingData.full_description &&
+        !this.isPlaceholderValue(existingData.full_description) &&
+        (this.isPlaceholderValue(newData.full_description) || !newData.full_description)) {
+      mergedData.full_description = existingData.full_description;
     }
 
     if (existingData.popular_name &&
@@ -510,9 +508,9 @@ class PeptideResearcher {
     if (existingData.short_description &&
         !this.isPlaceholderValue(existingData.short_description)) {
       mergedData.short_description = existingData.short_description;
-    } else if (!mergedData.short_description && mergedData.description) {
-      // Auto-generate short_description from description if missing
-      mergedData.short_description = mergedData.description.substring(0, 250);
+    } else if (!mergedData.short_description && mergedData.full_description) {
+      // Auto-generate short_description from full_description if missing
+      mergedData.short_description = mergedData.full_description.substring(0, 250);
     }
 
     // Smart merge for what_it_does
@@ -526,7 +524,7 @@ class PeptideResearcher {
     }
 
     // Intelligently merge array fields
-    const arrayFields = ['developmental_codes', 'street_names', 'product_names', 'benefits', 'dosage_levels', 'application_methods', 'research', 'tags'];
+    const arrayFields = ['developmental_codes', 'product_names', 'benefits', 'dosage_levels', 'application_methods', 'research', 'tags'];
 
     for (const field of arrayFields) {
       mergedData[field] = this.mergeArraysIntelligently(
@@ -550,9 +548,8 @@ class PeptideResearcher {
 title: ${data.title}
 popular_name: "${data.popular_name}"
 developmental_codes: [${data.developmental_codes.map(code => `"${code}"`).join(', ')}]
-street_names: [${data.street_names.map(name => `"${name}"`).join(', ')}]
 product_names: [${data.product_names.map(name => `"${name}"`).join(', ')}]
-description: "${data.description}"
+full_description: "${data.full_description}"
 short_description: "${data.short_description || ''}"
 benefits: [${data.benefits.map(benefit => `"${benefit}"`).join(', ')}]
 dosage_levels: [${data.dosage_levels.map(dosage => `"${dosage}"`).join(', ')}]

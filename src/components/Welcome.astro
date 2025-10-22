@@ -20,8 +20,7 @@ const peptides = await getCollection('peptides');
             <a href={`/${peptide.slug}`} class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all">
               <div class="card-body">
                 <h2 class="card-title text-primary uppercase">{peptide.data.popular_name}</h2>
-                <p class="text-sm opacity-70">{peptide.data.title.charAt(0).toUpperCase() + peptide.data.title.slice(1)}</p>
-                <p>{peptide.data.short_description}</p>
+                <p>{peptide.data.what_it_does}</p>
                 <div class="card-actions justify-end">
                   <span class="badge badge-primary badge-outline">Learn more →</span>
                 </div>

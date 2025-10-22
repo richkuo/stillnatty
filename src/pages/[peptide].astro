@@ -6,9 +6,8 @@ interface Frontmatter {
   title?: string;
   popular_name?: string;
   developmental_codes?: string[];
-  street_names?: string[];
   product_names?: string[];
-  description?: string;
+  full_description?: string;
   short_description?: string;
   benefits?: string[];
   dosage_levels?: string[];
@@ -44,7 +43,7 @@ const { default: Content, frontmatter } = file as { default: any; frontmatter: F
 
 // Build dynamic description
 const pageTitle = `${frontmatter.title || 'Peptide'} - Still Natty`;
-const pageDescription = frontmatter.description || frontmatter.short_description || `Learn about ${frontmatter.title}, including benefits, dosages, and scientific research.`;
+const pageDescription = frontmatter.full_description || frontmatter.short_description || `Learn about ${frontmatter.title}, including benefits, dosages, and scientific research.`;
 ---
 
 <Layout
@@ -61,7 +60,7 @@ const pageDescription = frontmatter.description || frontmatter.short_description
         <article class="card bg-base-100 shadow-xl mt-4">
           <div class="card-body">
             <div class="flex items-start justify-between">
-              <h1 class="card-title text-4xl md:text-5xl">{frontmatter.title}</h1>
+              <h1 class="card-title text-4xl md:text-5xl uppercase">{frontmatter.popular_name}</h1>
               {frontmatter.is_natty !== undefined && (
                 <span class={`badge badge-lg ${frontmatter.is_natty ? 'badge-success' : 'badge-error'}`}>
                   {frontmatter.is_natty ? '✓ Natty' : '✗ Not Natty'}
@@ -86,7 +85,7 @@ const pageDescription = frontmatter.description || frontmatter.short_description
               </div>
             )}
 
-            {frontmatter.description && (
+            {frontmatter.full_description && (
               <div class="card bg-base-200 w-full">
                 <div class="card-body">
                   <div class="collapse collapse-arrow">
@@ -95,7 +94,7 @@ const pageDescription = frontmatter.description || frontmatter.short_description
                       <h3 class="card-title">Full Description (read more)</h3>
                     </div>
                     <div class="collapse-content">
-                      {frontmatter.description.split(/(?<=[.!?])\s+/).map((sentence) => (
+                      {frontmatter.full_description.split(/(?<=[.!?])\s+/).map((sentence) => (
                         <p class="text-base mb-2">{sentence}</p>
                       ))}
                     </div>
@@ -112,43 +111,6 @@ const pageDescription = frontmatter.description || frontmatter.short_description
                     <ul class="list-disc list-inside">
                       {frontmatter.application_methods.map((method) => (
                         <li>{method}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-
-{frontmatter.popular_name && (
-                <div class="card bg-base-200">
-                  <div class="card-body card-compact">
-                    <h3 class="card-title text-sm">Popular Name</h3>
-                    <p class="text-lg font-semibold">{frontmatter.popular_name}</p>
-                  </div>
-                </div>
-              )}
-
-              {frontmatter.developmental_codes && frontmatter.developmental_codes.length > 0 && (
-                <div class="card bg-base-200">
-                  <div class="card-body card-compact">
-                    <h3 class="card-title text-sm">Developmental Codes</h3>
-                    <ul class="list-disc list-inside">
-                      {frontmatter.developmental_codes.map((code) => (
-                        <li>{code}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {frontmatter.street_names && frontmatter.street_names.length > 0 && (
-                <div class="card bg-base-200">
-                  <div class="card-body card-compact">
-                    <h3 class="card-title text-sm">Street Names</h3>
-                    <ul class="list-disc list-inside">
-                      {frontmatter.street_names.map((name) => (
-                        <li>{name}</li>
                       ))}
                     </ul>
                   </div>
