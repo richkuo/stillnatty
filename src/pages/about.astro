@@ -1,28 +1,31 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PostHogLayout from '../layouts/PostHogLayout.astro';
 ---
 
-<Layout title="About - Still Natty">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h1 class="text-4xl font-bold text-gray-900 mb-8">About Still Natty</h1>
+<PostHogLayout>
+  <Layout title="About - Still Natty">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-8">About Still Natty</h1>
 
-    <div class="prose prose-lg max-w-none">
-      <p class="text-gray-600 leading-relaxed mb-6">
-        Still Natty is a reference resource providing summarized information about peptides and related compounds to help individuals make informed decisions about their personal health and fitness goals.
-      </p>
-
-      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-        <p class="text-yellow-800 font-semibold">
-          Important Disclaimer
+      <div class="prose prose-lg max-w-none">
+        <p class="text-gray-600 leading-relaxed mb-6">
+          Still Natty is a reference resource providing summarized information about peptides and related compounds to help individuals make informed decisions about their personal health and fitness goals.
         </p>
-        <p class="text-yellow-700 mt-2">
-          This site provides reference material only and is not medical advice. Always consult with a qualified healthcare provider before starting any new supplement, peptide, or medication regimen.
+
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+          <p class="text-yellow-800 font-semibold">
+            Important Disclaimer
+          </p>
+          <p class="text-yellow-700 mt-2">
+            This site provides reference material only and is not medical advice. Always consult with a qualified healthcare provider before starting any new supplement, peptide, or medication regimen.
+          </p>
+        </div>
+
+        <p class="text-gray-600 leading-relaxed">
+          The information presented here is compiled from scientific research, clinical trials, and publicly available data. It is intended for educational purposes to help you have informed discussions with your healthcare provider.
         </p>
       </div>
-
-      <p class="text-gray-600 leading-relaxed">
-        The information presented here is compiled from scientific research, clinical trials, and publicly available data. It is intended for educational purposes to help you have informed discussions with your healthcare provider.
-      </p>
     </div>
-  </div>
-</Layout>
+  </Layout>
+</PostHogLayout>

@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths, InferGetStaticParamsType, InferGetStaticPropsType } from 'astro';
 import Layout from '../layouts/Layout.astro';
+import PostHogLayout from '../layouts/PostHogLayout.astro';
 
 interface Frontmatter {
   title?: string;
@@ -46,162 +47,178 @@ const pageTitle = `${frontmatter.title || 'Peptide'} - Still Natty`;
 const pageDescription = frontmatter.full_description || frontmatter.short_description || `Learn about ${frontmatter.title}, including benefits, dosages, and scientific research.`;
 ---
 
-<Layout
-  title={pageTitle}
-  description={pageDescription}
-  type="article"
-  publishedTime={frontmatter.created_at}
-  modifiedTime={frontmatter.last_updated_at}
->
-  <div class="hero min-h-screen">
-    <div class="hero-content w-full max-w-4xl">
-      <div class="w-full">
-        <a href="/" class="btn btn-link btn-primary">← Back to Peptides</a>
-        <article class="card bg-base-100 shadow-xl mt-4">
-          <div class="card-body">
-            <div class="flex items-start justify-between">
-              <h1 class="card-title text-4xl md:text-5xl uppercase">{frontmatter.popular_name}</h1>
-              {frontmatter.is_natty !== undefined && (
-                <span class={`badge badge-lg ${frontmatter.is_natty ? 'badge-success' : 'badge-error'}`}>
-                  {frontmatter.is_natty ? '✓ Natty' : '✗ Not Natty'}
-                </span>
-              )}
-            </div>
-
-            {frontmatter.tags && frontmatter.tags.length > 0 && (
-              <div class="flex flex-wrap gap-2">
-                {frontmatter.tags.map((tag) => (
-                  <span class="badge badge-primary">{tag}</span>
-                ))}
+<PostHogLayout>
+  <Layout
+    title={pageTitle}
+    description={pageDescription}
+    type="article"
+    publishedTime={frontmatter.created_at}
+    modifiedTime={frontmatter.last_updated_at}
+  >
+    <div class="hero min-h-screen">
+      <div class="hero-content w-full max-w-4xl">
+        <div class="w-full">
+          <a href="/" class="btn btn-link btn-primary">Back to Peptides</a>
+          <article class="card bg-base-100 shadow-xl mt-4">
+            <div class="card-body">
+              <div class="flex items-start justify-between">
+                <h1 class="card-title text-4xl md:text-5xl uppercase">{frontmatter.popular_name}</h1>
+                {frontmatter.is_natty !== undefined && (
+                  <span class={`badge badge-lg flex items-center gap-1 ${frontmatter.is_natty ? 'badge-success' : 'badge-error'}`}>
+                    {frontmatter.is_natty ? (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        Natty
+                      </>
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                        </svg>
+                        Not Natty
+                      </>
+                    )}
+                  </span>
+                )}
               </div>
-            )}
 
-            {frontmatter.what_it_does && (
-              <div class="card bg-base-200 w-full">
-                <div class="card-body">
-                  <h3 class="card-title">What It Does</h3>
-                  <p>{frontmatter.what_it_does}</p>
+              {frontmatter.tags && frontmatter.tags.length > 0 && (
+                <div class="flex flex-wrap gap-2">
+                  {frontmatter.tags.map((tag) => (
+                    <span class="badge badge-primary">{tag}</span>
+                  ))}
                 </div>
-              </div>
-            )}
+              )}
 
-            {frontmatter.full_description && (
-              <div class="card bg-base-200 w-full">
-                <div class="card-body">
-                  <div class="collapse collapse-arrow">
-                    <input type="checkbox" />
-                    <div class="collapse-title">
-                      <h3 class="card-title">Full Description (read more)</h3>
+              {frontmatter.what_it_does && (
+                <div class="card bg-base-200 w-full">
+                  <div class="card-body">
+                    <h3 class="card-title">What It Does</h3>
+                    <p>{frontmatter.what_it_does}</p>
+                  </div>
+                </div>
+              )}
+
+              {frontmatter.full_description && (
+                <div class="card bg-base-200 w-full">
+                  <div class="card-body">
+                    <div class="collapse collapse-arrow">
+                      <input type="checkbox" />
+                      <div class="collapse-title">
+                        <h3 class="card-title">Full Description (read more)</h3>
+                      </div>
+                      <div class="collapse-content">
+                        {frontmatter.full_description.split(/(?<=[.!?])\s+/).map((sentence) => (
+                          <p class="text-base mb-2">{sentence}</p>
+                        ))}
+                      </div>
                     </div>
-                    <div class="collapse-content">
-                      {frontmatter.full_description.split(/(?<=[.!?])\s+/).map((sentence) => (
-                        <p class="text-base mb-2">{sentence}</p>
-                      ))}
+                  </div>
+                </div>
+              )}
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {frontmatter.application_methods && frontmatter.application_methods.length > 0 && (
+                  <div class="card bg-base-200">
+                    <div class="card-body card-compact">
+                      <h3 class="card-title text-sm">Application Methods</h3>
+                      <ul class="list-disc list-inside">
+                        {frontmatter.application_methods.map((method) => (
+                          <li>{method}</li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {frontmatter.product_names && frontmatter.product_names.length > 0 && (
+                  <div class="card bg-base-200">
+                    <div class="card-body card-compact">
+                      <h3 class="card-title text-sm">Product Names</h3>
+                      <ul class="list-disc list-inside">
+                        {frontmatter.product_names.map((name) => (
+                          <li>{name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {frontmatter.application_methods && frontmatter.application_methods.length > 0 && (
-                <div class="card bg-base-200">
-                  <div class="card-body card-compact">
-                    <h3 class="card-title text-sm">Application Methods</h3>
-                    <ul class="list-disc list-inside">
-                      {frontmatter.application_methods.map((method) => (
-                        <li>{method}</li>
-                      ))}
-                    </ul>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {frontmatter.benefits && frontmatter.benefits.length > 0 && (
+                  <div class="card bg-base-200">
+                    <div class="card-body card-compact">
+                      <h3 class="card-title text-sm">Benefits</h3>
+                      <ul class="list-disc list-inside">
+                        {frontmatter.benefits.map((benefit) => (
+                          <li>{benefit}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {frontmatter.product_names && frontmatter.product_names.length > 0 && (
-                <div class="card bg-base-200">
-                  <div class="card-body card-compact">
-                    <h3 class="card-title text-sm">Product Names</h3>
-                    <ul class="list-disc list-inside">
-                      {frontmatter.product_names.map((name) => (
-                        <li>{name}</li>
-                      ))}
-                    </ul>
+                {frontmatter.dosage_levels && frontmatter.dosage_levels.length > 0 && (
+                  <div class="card bg-base-200">
+                    <div class="card-body card-compact">
+                      <h3 class="card-title text-sm">Dosage Levels</h3>
+                      <ul class="list-disc list-inside">
+                        {frontmatter.dosage_levels.map((level) => (
+                          <li>{level}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {frontmatter.benefits && frontmatter.benefits.length > 0 && (
-                <div class="card bg-base-200">
-                  <div class="card-body card-compact">
-                    <h3 class="card-title text-sm">Benefits</h3>
-                    <ul class="list-disc list-inside">
-                      {frontmatter.benefits.map((benefit) => (
-                        <li>{benefit}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-
-              {frontmatter.dosage_levels && frontmatter.dosage_levels.length > 0 && (
-                <div class="card bg-base-200">
-                  <div class="card-body card-compact">
-                    <h3 class="card-title text-sm">Dosage Levels</h3>
-                    <ul class="list-disc list-inside">
-                      {frontmatter.dosage_levels.map((level) => (
-                        <li>{level}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {frontmatter.research && frontmatter.research.length > 0 && (
-                <div class="card bg-base-200">
-                  <div class="card-body card-compact">
-                    <h3 class="card-title text-sm">Research</h3>
-                    <ul class="list-disc list-inside">
-                      {frontmatter.research.map((item) => (
-                        <li>
-                          <a href={item.url} class="link link-primary" target="_blank" rel="noopener noreferrer">{item.summary}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-
-              {frontmatter.affiliate_links && frontmatter.affiliate_links.length > 0 && (
-                <div class="card bg-base-200">
-                  <div class="card-body card-compact">
-                    <h3 class="card-title text-sm">Where to Buy</h3>
-                    <ul class="list-disc list-inside">
-                      {frontmatter.affiliate_links.map((link) => (
-                        <li><a href={link} class="link link-primary" target="_blank" rel="noopener noreferrer">{link}</a></li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div class="divider"></div>
-            <div class="prose prose-lg max-w-none">
-              <Content />
-            </div>
-            
-            {frontmatter.last_updated_at && (
-              <div class="mt-4 text-sm text-base-content/60">
-                Last Updated: {new Date(frontmatter.last_updated_at).toLocaleDateString()}
+                )}
               </div>
-            )}
-          </div>
-        </article>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {frontmatter.research && frontmatter.research.length > 0 && (
+                  <div class="card bg-base-200">
+                    <div class="card-body card-compact">
+                      <h3 class="card-title text-sm">Research</h3>
+                      <ul class="list-disc list-inside">
+                        {frontmatter.research.map((item) => (
+                          <li>
+                            <a href={item.url} class="link link-primary" target="_blank" rel="noopener noreferrer">{item.summary}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {frontmatter.affiliate_links && frontmatter.affiliate_links.length > 0 && (
+                  <div class="card bg-base-200">
+                    <div class="card-body card-compact">
+                      <h3 class="card-title text-sm">Where to Buy</h3>
+                      <ul class="list-disc list-inside">
+                        {frontmatter.affiliate_links.map((link) => (
+                          <li><a href={link} class="link link-primary" target="_blank" rel="noopener noreferrer">{link}</a></li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div class="divider"></div>
+              <div class="prose prose-lg max-w-none">
+                <Content />
+              </div>
+              
+              {frontmatter.last_updated_at && (
+                <div class="mt-4 text-sm text-base-content/60">
+                  Last Updated: {new Date(frontmatter.last_updated_at).toLocaleDateString()}
+                </div>
+              )}
+            </div>
+          </article>
+        </div>
       </div>
     </div>
-  </div>
-</Layout>
+  </Layout>
+</PostHogLayout>
