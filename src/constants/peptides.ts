@@ -1,6 +1,7 @@
 export const CURRENT_PEPTIDE_FILES = [
   'bpc-157',
   'cjc-1295',
+  'cjc-1295-ipamorelin',
   'ibutamoren',
   'igf-1lr3',
   'ipamorelin',
