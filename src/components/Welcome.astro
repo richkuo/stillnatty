@@ -1,7 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
+import { CURRENT_PEPTIDE_FILES } from '../constants/peptides';
 
-const peptides = await getCollection('peptides');
+const allPeptides = await getCollection('peptides');
+const peptides = allPeptides.filter(peptide =>
+  CURRENT_PEPTIDE_FILES.includes(peptide.slug as any)
+);
 ---
 
 <main class="min-h-screen">
@@ -10,7 +14,10 @@ const peptides = await getCollection('peptides');
       <div class="max-w-6xl">
         <div class="text-center mb-8">
           <h1 class="text-5xl font-bold mb-4">Still Natty</h1>
-          <p class="text-xl opacity-80">Your comprehensive guide to popular peptides, their benefits, and research-backed information</p>
+          <p class="text-xl opacity-80">Can't get your hands on Ozempic? Learn about the alternatives that are cheaper and significantly more effective.</p>
+          <p class="text-xl opacity-80">Recovering from a serious physical injury? Learn about the powerful healing effects of locally administered, injectable peptides.</p>
+          <p class="text-xl opacity-80">Want to stay natty but not sure where to draw the line? We've got you covered.</p>
+          <p class="text-xl opacity-80">This is your comprehensive guide to popular peptides, their benefits, and research-backed information.</p>
         </div>
 
         <h5 class="text-lg font-bold text-primary">Top Peptides</h5>
