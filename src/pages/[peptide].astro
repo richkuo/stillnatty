@@ -101,23 +101,67 @@ const pageDescription = frontmatter.full_description || frontmatter.short_descri
                 </div>
               )}
 
-              {frontmatter.full_description && (
+              {frontmatter.short_description && (
                 <div class="card bg-base-200 w-full">
                   <div class="card-body">
-                    <div class="collapse collapse-arrow">
-                      <input type="checkbox" />
-                      <div class="collapse-title">
-                        <h3 class="card-title">Full Description (read more)</h3>
-                      </div>
-                      <div class="collapse-content">
-                        {frontmatter.full_description.split(/(?<=[.!?])\s+/).map((sentence) => (
-                          <p class="text-base mb-2">{sentence}</p>
-                        ))}
-                      </div>
-                    </div>
+                    <h3 class="card-title">Description</h3>
+                    <p>
+                      {frontmatter.short_description}
+                      {frontmatter.full_description && (
+                        <>
+                          {' '}
+                          <button
+                            class="link link-primary"
+                            onclick="document.getElementById('description_modal').showModal()"
+                          >
+                            View full description
+                          </button>
+                        </>
+                      )}
+                    </p>
                   </div>
                 </div>
               )}
+
+              <dialog id="description_modal" class="modal">
+                <div class="modal-box w-11/12 max-w-4xl">
+                  <form method="dialog">
+                  </form>
+                  <h3 class="font-bold text-lg mb-4">Full Description</h3>
+                  <div class="space-y-3">
+                    {frontmatter.full_description?.split(/(?<=[.!?])\s+/).map((sentence) => (
+                      <p class="text-base">{sentence}</p>
+                    ))}
+                  </div>
+                  <div class="modal-action">
+                    <form method="dialog">
+                      <button class="btn">Close</button>
+                    </form>
+                  </div>
+                </div>
+                <form method="dialog" class="modal-backdrop">
+                  <button>close</button>
+                </form>
+              </dialog>
+
+              <dialog id="lyophilized_modal" class="modal">
+                <div class="modal-box w-11/12 max-w-2xl">
+                  <form method="dialog">
+                  </form>
+                  <h3 class="font-bold text-lg mb-4">What is Lyophilized Powder?</h3>
+                  <p class="text-base">
+                    Lyophilized powder is a sterile, freeze-dried medication that must be reconstituted (mixed with a liquid solvent, like sterile water) before it can be injected. This process extends the drug's shelf life and stability, making it ideal for temperature-sensitive products. The lyophilization process removes water from the peptide in a frozen state through sublimation, which preserves the physical and chemical properties until it is needed.
+                  </p>
+                  <div class="modal-action">
+                    <form method="dialog">
+                      <button class="btn">Close</button>
+                    </form>
+                  </div>
+                </div>
+                <form method="dialog" class="modal-backdrop">
+                  <button>close</button>
+                </form>
+              </dialog>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {frontmatter.application_methods && frontmatter.application_methods.length > 0 && (
@@ -200,6 +244,12 @@ const pageDescription = frontmatter.full_description || frontmatter.short_descri
                           <li><a href={link.url} class="link link-primary" target="_blank" rel="noopener noreferrer">{link.title}</a></li>
                         ))}
                       </ul>
+                      <p class="text-xs text-base-content/70 mt-2">
+                        *Peptides are stored in <button
+                          class="link link-primary"
+                          onclick="document.getElementById('lyophilized_modal').showModal()"
+                        >lyophilized powder</button> form and need to be reconstituted with sterile bacteriostatic water before use.
+                      </p>
                     </div>
                   </div>
                 )}

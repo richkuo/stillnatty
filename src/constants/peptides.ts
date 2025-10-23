@@ -5,6 +5,7 @@ export const CURRENT_PEPTIDE_FILES = [
   'ibutamoren',
   'igf-1lr3',
   'ipamorelin',
+  'nad',
   'retatrutide',
   'semaglutide',
   'tb-500',
