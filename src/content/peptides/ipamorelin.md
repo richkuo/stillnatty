@@ -11,7 +11,7 @@ application_methods: ["Subcutaneous injection"]
 what_it_does: "Ipamorelin tells your pituitary gland to release growth hormone in a very targeted way, without triggering other hormones like cortisol or prolactin. This results in better sleep, improved recovery, and potential body composition benefits with minimal side effects."
 research: [{ summary: "Wikipedia article", url: "https://en.wikipedia.org/wiki/ipamorelin" }, { summary: "PubMed database search", url: "https://pubmed.ncbi.nlm.nih.gov/?term=ipamorelin" }, { summary: "Clinical trials search", url: "https://clinicaltrials.gov/search?term=ipamorelin" }, { summary: "First selective GHS characterization study", url: "https://pubmed.ncbi.nlm.nih.gov/9849822/" }, { summary: "Bone growth in rats research", url: "https://pubmed.ncbi.nlm.nih.gov/10373343/" }, { summary: "Cisplatin-induced weight loss study", url: "https://pubmed.ncbi.nlm.nih.gov/39043357/" }, { summary: "Hypothalamic-pituitary-testicular axis effects", url: "https://pubmed.ncbi.nlm.nih.gov/38996787/" }, { summary: "Comprehensive GHS review", url: "https://onlinelibrary.wiley.com/doi/full/10.1002/rco2.9" }]
 tags: ["growth hormone", "sleep", "GHS", "selective agonist", "anti-aging", "subcutaneous"]
-affiliate_links: []
+affiliate_links: [{title: "Bacteriostatic Water Reconstitution Solution 10ml", url: "https://bit.ly/3L8IxFM"}, {title: "CJC1295/Ipamorelin", url: "https://bit.ly/3WEe2dD"}]
 is_natty: true
 created_at: 2025-10-17T08:25:41.104Z
 last_updated_at: 2025-10-19T03:36:00.394Z

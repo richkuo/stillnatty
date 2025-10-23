@@ -11,7 +11,7 @@ application_methods: ["Subcutaneous injection", "Intramuscular injection"]
 what_it_does: "IGF-1 LR3 is a modified version of insulin-like growth factor that lasts much longer in your body. It stimulates muscle cells to grow and multiply, speeds up protein building, and helps burn fat, making it extremely powerful for muscle growth but with significant risks including low blood sugar."
 research: [{ summary: "PubMed search for IGF-1 LR3", url: "https://pubmed.ncbi.nlm.nih.gov/?term=IGF-1+LR3" }, { summary: "PubMed search for Long R3 IGF", url: "https://pubmed.ncbi.nlm.nih.gov/?term=long+r3+insulin-like+growth+factor" }, { summary: "Muscle growth study", url: "https://pubmed.ncbi.nlm.nih.gov/11500945/" }, { summary: "IGF-1 receptor signaling pathways", url: "https://pubmed.ncbi.nlm.nih.gov/11836274/" }, { summary: "IGF-1 and muscle regeneration research", url: "https://pubmed.ncbi.nlm.nih.gov/14665680/" }, { summary: "Neuroprotective effects study", url: "https://pubmed.ncbi.nlm.nih.gov/15142175/" }, { summary: "Metabolic effects research", url: "https://pubmed.ncbi.nlm.nih.gov/12788931/" }, { summary: "IGF-1 half-life and pharmacokinetics", url: "https://pubmed.ncbi.nlm.nih.gov/8070593/" }, { summary: "Cancer risk considerations", url: "https://pubmed.ncbi.nlm.nih.gov/15166357/" }]
 tags: ["muscle gain", "recovery", "growth hormone", "injectable", "subcutaneous", "intramuscular"]
-affiliate_links: []
+affiliate_links: [{title: "Bacteriostatic Water Reconstitution Solution 10ml", url: "https://bit.ly/3L8IxFM"}, {title: "1mg IGF-1 LR3", url: "https://bit.ly/4hlwBfY"}]
 is_natty: true
 created_at: 2025-10-19T08:15:00.000Z
 last_updated_at: 2025-10-19T08:15:00.000Z

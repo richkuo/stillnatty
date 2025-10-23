@@ -442,11 +442,11 @@ class PeptideResearcher {
     }
 
     // Both have data - merge intelligently
-    if (fieldName === 'research') {
-      // For research objects, use case-insensitive URL comparison
+    if (fieldName === 'research' || fieldName === 'affiliate_links') {
+      // For research/affiliate_links objects, use case-insensitive URL comparison
       const urlMap = new Map();
 
-      // Add existing research items
+      // Add existing items
       validExisting.forEach(item => {
         const normalized = this.normalizeUrl(item);
         if (normalized && !urlMap.has(normalized)) {
@@ -457,7 +457,7 @@ class PeptideResearcher {
         }
       });
 
-      // Add new research items only if URL not already present (case-insensitive)
+      // Add new items only if URL not already present (case-insensitive)
       validNew.forEach(item => {
         const normalized = this.normalizeUrl(item);
         if (normalized && !urlMap.has(normalized)) {
@@ -486,8 +486,13 @@ class PeptideResearcher {
     };
 
     // Preserve affiliate_links if they exist (never overwrite user-added links)
+    // Use intelligent merge for affiliate_links to handle both old (string) and new (object) formats
     if (existingData.affiliate_links && existingData.affiliate_links.length > 0) {
-      mergedData.affiliate_links = existingData.affiliate_links;
+      mergedData.affiliate_links = this.mergeArraysIntelligently(
+        existingData.affiliate_links,
+        newData.affiliate_links || [],
+        'affiliate_links'
+      );
     }
 
     // Smart merge for string fields
@@ -557,7 +562,7 @@ application_methods: [${data.application_methods.map(method => `"${method}"`).jo
 what_it_does: "${data.what_it_does || ''}"
 research: [${data.research.map(item => `{ summary: "${item.summary}", url: "${item.url}" }`).join(', ')}]
 tags: [${data.tags.map(tag => `"${tag}"`).join(', ')}]
-affiliate_links: [${data.affiliate_links.map(link => `"${link}"`).join(', ')}]
+affiliate_links: [${data.affiliate_links.map(link => typeof link === 'object' ? `{ title: "${link.title}", url: "${link.url}" }` : `{ title: "Buy ${data.title}", url: "${link}" }`).join(', ')}]
 is_natty: ${data.is_natty}
 created_at: ${createdAt}
 last_updated_at: ${lastUpdatedAt}
