@@ -1,5 +1,6 @@
 ---
 import PostHog from '../components/posthog.astro';
+import Tracking from '../components/tracking.astro';
 ---
 <html>
   <head>
@@ -7,5 +8,6 @@ import PostHog from '../components/posthog.astro';
   </head>
   <body>
     <slot />
+    <Tracking />
   </body>
 </html>

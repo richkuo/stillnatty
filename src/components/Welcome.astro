@@ -23,7 +23,13 @@ const peptides = allPeptides.filter(peptide =>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
           {peptides.map((peptide) => (
-            <a href={`/${peptide.slug}`} class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all">
+            <a 
+              href={`/${peptide.slug}`} 
+              class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all"
+              data-peptide-link
+              data-peptide-name={peptide.data.popular_name}
+              data-peptide-slug={peptide.slug}
+            >
               <div class="card-body">
                 <h2 class="card-title text-primary uppercase">{peptide.data.popular_name}</h2>
                 <p>{peptide.data.what_it_does}</p>

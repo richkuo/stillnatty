@@ -58,7 +58,12 @@ const pageDescription = frontmatter.full_description || frontmatter.short_descri
     <div class="hero min-h-screen">
       <div class="hero-content w-full max-w-4xl">
         <div class="w-full">
-          <a href="/" class="btn btn-link btn-primary">Back to Peptides</a>
+          <a 
+            href="/" 
+            class="btn btn-link btn-primary"
+            data-back-link
+            data-peptide-name={frontmatter.popular_name}
+          >Back to Peptides</a>
           <article class="card bg-base-100 shadow-xl mt-4">
             <div class="card-body">
               <div class="flex items-start justify-between">
@@ -227,7 +232,15 @@ const pageDescription = frontmatter.full_description || frontmatter.short_descri
                       <ul class="list-disc list-inside">
                         {frontmatter.research.map((item) => (
                           <li>
-                            <a href={item.url} class="link link-primary" target="_blank" rel="noopener noreferrer">{item.summary}</a>
+                            <a 
+                              href={item.url} 
+                              class="link link-primary" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              data-research-link
+                              data-research-summary={item.summary}
+                              data-peptide-name={frontmatter.popular_name}
+                            >{item.summary}</a>
                           </li>
                         ))}
                       </ul>
@@ -241,7 +254,17 @@ const pageDescription = frontmatter.full_description || frontmatter.short_descri
                       <h3 class="card-title text-sm">Where to Buy</h3>
                       <ul class="list-disc list-inside">
                         {frontmatter.affiliate_links.map((link) => (
-                          <li><a href={link.url} class="link link-primary" target="_blank" rel="noopener noreferrer">{link.title}</a></li>
+                          <li>
+                            <a 
+                              href={link.url} 
+                              class="link link-primary" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              data-affiliate-link
+                              data-affiliate-title={link.title}
+                              data-peptide-name={frontmatter.popular_name}
+                            >{link.title}</a>
+                          </li>
                         ))}
                       </ul>
                       <p class="text-xs text-base-content/70 mt-2">

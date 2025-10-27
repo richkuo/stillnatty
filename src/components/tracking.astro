@@ -1,0 +1,126 @@
+---
+// This component adds PostHog event tracking for links
+---
+<script is:inline>
+  // Track page views based on current URL
+  function trackPageView() {
+    const path = window.location.pathname;
+    const url = window.location.href;
+    
+    // Check if we're on the homepage
+    if (path === '/' || path === '') {
+      window.posthog.capture('page_view_homepage', {
+        page_type: 'homepage',
+        url: url,
+        title: document.title
+      });
+    }
+    // Check if we're on a peptide page
+    else if (path.match(/^\/[^/]+\/?$/)) {
+      // Extract peptide slug from URL
+      const peptideSlug = path.replace(/^\//, '').replace(/\/$/, '');
+      
+      // Get peptide name from the page title or H1
+      const h1 = document.querySelector('h1');
+      const peptideName = h1 ? h1.textContent.trim() : '';
+      
+      window.posthog.capture('page_view_peptide', {
+        page_type: 'peptide',
+        peptide_slug: peptideSlug,
+        peptide_name: peptideName,
+        url: url,
+        title: document.title
+      });
+    }
+    // Check if we're on about, terms, or privacy pages
+    else if (path.match(/^\/(about|terms|privacy)\/?$/)) {
+      const pageType = path.replace(/^\//, '').replace(/\/$/, '');
+      window.posthog.capture('page_view_static', {
+        page_type: pageType,
+        url: url,
+        title: document.title
+      });
+    }
+  }
+
+  // Wait for PostHog to be loaded
+  function initTracking() {
+    if (typeof window.posthog === 'undefined' || !window.posthog.init) {
+      setTimeout(initTracking, 100);
+      return;
+    }
+
+    // Track page views
+    trackPageView();
+
+    // Track peptide card clicks from homepage
+    document.querySelectorAll('a[data-peptide-link]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const peptideName = link.getAttribute('data-peptide-name');
+        const peptideSlug = link.getAttribute('data-peptide-slug');
+        
+        window.posthog.capture('peptide_clicked', {
+          peptide_name: peptideName,
+          peptide_slug: peptideSlug,
+          source: 'homepage',
+          url: window.location.href
+        });
+      });
+    });
+
+    // Track affiliate link clicks
+    document.querySelectorAll('a[data-affiliate-link]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const affiliateTitle = link.getAttribute('data-affiliate-title');
+        const affiliateUrl = link.getAttribute('href');
+        const peptideName = link.getAttribute('data-peptide-name');
+        
+        window.posthog.capture('affiliate_link_clicked', {
+          affiliate_title: affiliateTitle,
+          affiliate_url: affiliateUrl,
+          peptide_name: peptideName,
+          source_page: window.location.pathname,
+          url: window.location.href
+        });
+      });
+    });
+
+    // Track research link clicks
+    document.querySelectorAll('a[data-research-link]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const researchSummary = link.getAttribute('data-research-summary');
+        const researchUrl = link.getAttribute('href');
+        const peptideName = link.getAttribute('data-peptide-name');
+        
+        window.posthog.capture('research_link_clicked', {
+          research_summary: researchSummary,
+          research_url: researchUrl,
+          peptide_name: peptideName,
+          source_page: window.location.pathname,
+          url: window.location.href
+        });
+      });
+    });
+
+    // Track "Back to Peptides" link
+    document.querySelectorAll('a[data-back-link]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const peptideName = link.getAttribute('data-peptide-name');
+        
+        window.posthog.capture('back_to_peptides_clicked', {
+          from_peptide: peptideName,
+          source_page: window.location.pathname,
+          url: window.location.href
+        });
+      });
+    });
+  }
+
+  // Initialize tracking when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTracking);
+  } else {
+    initTracking();
+  }
+</script>
+

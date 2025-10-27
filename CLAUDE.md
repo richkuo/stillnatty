@@ -6,6 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Astro application deployed on Cloudflare Pages using the Cloudflare adapter. Uses Tailwind CSS 4.x and Bun as the package manager.
 
+## Important Rules
+
+**Documentation Files**
+- NEVER proactively create documentation files (*.md) or README files
+- Only create documentation files if explicitly requested by the user
+
 ## Commands
 
 Run from project root using Bun:
@@ -44,3 +50,8 @@ Run from project root using Bun:
   - Includes smart merge behavior that prevents duplicates and filters placeholder text
   - Automatically handles case-insensitive URL deduplication
   - Preserves user-added data (affiliate links, valid content)
+
+- [POSTHOG_TRACKING.md](POSTHOG_TRACKING.md) - PostHog analytics tracking documentation
+  - Lists all tracked events (peptide clicks, affiliate link clicks, research link clicks, navigation)
+  - Explains event properties and implementation details
+  - Provides guidance on creating insights and analyzing data
