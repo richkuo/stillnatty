@@ -2,7 +2,7 @@ export const CURRENT_PEPTIDE_FILES = [
   'bpc-157',
   // 'cjc-1295',
   'cjc-1295-ipamorelin',
-  // 'ibutamoren', // No affiliate links
+  'ibutamoren', // No affiliate links
   'igf-1lr3',
   // 'ipamorelin',
   'nad',
@@ -10,7 +10,7 @@ export const CURRENT_PEPTIDE_FILES = [
   'semaglutide',
   'tb-500',
   'tirzepatide',
-  // 'vosilasarm', // No affiliate links
+  'vosilasarm', // No affiliate links
 ] as const;
 
 export type PeptideSlug = typeof CURRENT_PEPTIDE_FILES[number];
