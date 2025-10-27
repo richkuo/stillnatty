@@ -1,0 +1,22 @@
+# Cursor Rules for StillNatty Astro Project
+
+## Documentation Files
+- NEVER proactively create documentation files (*.md) or README files
+- Only create documentation files if explicitly requested by the user
+- This prevents cluttering the repository with unnecessary documentation
+
+## Code Style
+- Use TypeScript for all new code files
+- Follow the existing patterns in the codebase
+- Use Bun as the package manager (not npm or yarn)
+
+## Astro Best Practices
+- Use Astro components (.astro files) for UI components
+- Keep TypeScript logic in separate .ts files when appropriate
+- Follow the existing directory structure in src/
+
+## Cloudflare Integration
+- Be mindful that this deploys to Cloudflare Pages
+- Use appropriate Cloudflare features when relevant
+- Test locally with `bun preview` before deploying
+
