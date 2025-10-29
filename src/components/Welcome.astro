@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { CURRENT_PEPTIDE_FILES } from '../constants/peptides';
+import FAQ from './FAQ.astro';
 
 const allPeptides = await getCollection('peptides');
 const peptides = allPeptides.filter(peptide =>
@@ -8,21 +9,58 @@ const peptides = allPeptides.filter(peptide =>
 );
 ---
 
-<main class="min-h-screen">
+<div class="min-h-screen">
   <div class="hero">
     <div class="hero-content">
       <div class="max-w-6xl">
         <div class="text-center mb-8">
-          <h1 class="text-2xl font-bold mb-2">Research Backed Guides to all things Peptides, Health, and Performance</h1>
-          <p class="text-xl opacity-80">Can't get your hands on Ozempic?</p>
-          <p class="text-xl font-bold text-primary">Learn about the alternatives that are cheaper and more effective.</p>
-          <p class="text-xl opacity-80">Recovering from a serious physical injury?</p>
-          <p class="text-xl font-bold text-primary">Learn about the powerful healing effects of locally administered, injectable peptides.</p>
-          <p class="text-xl opacity-80">Want to stay natty but not sure where to draw the line?</p>
-          <p class="text-xl font-bold text-primary">We've got you covered.</p>
+          <h1 class="text-4xl md:text-5xl font-bold mb-4">Natty or Not? Your Complete Guide to Peptides</h1>
+          <p class="text-xl md:text-2xl opacity-90 mb-6">Research-backed guides to peptides, health, and performance enhancement</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left mb-8">
+            <div class="card bg-base-200">
+              <div class="card-body card-compact">
+                <p class="text-lg opacity-80">Can't get your hands on Ozempic?</p>
+                <p class="text-lg font-bold text-primary">Learn about the alternatives that are cheaper and more effective.</p>
+              </div>
+            </div>
+            <div class="card bg-base-200">
+              <div class="card-body card-compact">
+                <p class="text-lg opacity-80">Recovering from a serious physical injury?</p>
+                <p class="text-lg font-bold text-primary">Learn about the powerful healing effects of locally administered, injectable peptides.</p>
+              </div>
+            </div>
+            <div class="card bg-base-200">
+              <div class="card-body card-compact">
+                <p class="text-lg opacity-80">Want to stay natty but not sure where to draw the line?</p>
+                <p class="text-lg font-bold text-primary">We've got you covered.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <h5 class="text-lg font-bold text-primary">Top Peptides</h5>
+        <section class="mb-12">
+          <h2 class="text-3xl font-bold mb-4 text-center">Natty or Not? We Help You Decide</h2>
+          <div class="card bg-base-200">
+            <div class="card-body">
+              <p class="text-lg mb-4">
+                In the fitness and bodybuilding world, the debate of "natty or not" is constant. Are you truly natural if you use peptides? 
+                The answer isn't always black and white. At Still Natty, we provide transparent information about each peptide's status in the 
+                natural bodybuilding community and according to WADA (World Anti-Doping Agency) regulations.
+              </p>
+              <p class="text-lg mb-4">
+                Each peptide guide includes a clear <span class="badge badge-success">Natty</span> or <span class="badge badge-error">Not Natty</span> 
+                indicator, helping you make informed decisions about what aligns with your goals and values in fitness.
+              </p>
+              <p class="text-lg">
+                Whether you're seeking therapeutic benefits, performance enhancement, or simply want to understand where these compounds stand 
+                in the natty debate, we've done the research so you don't have to.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <h2 class="text-2xl font-bold text-primary mb-4">Explore Peptides by Natty Status</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
           {peptides.map((peptide) => (
@@ -34,7 +72,14 @@ const peptides = allPeptides.filter(peptide =>
               data-peptide-slug={peptide.slug}
             >
               <div class="card-body">
-                <h2 class="card-title text-primary uppercase">{peptide.data.popular_name}</h2>
+                <div class="flex items-start justify-between">
+                  <h3 class="card-title text-primary uppercase">{peptide.data.popular_name}</h3>
+                  {peptide.data.is_natty !== undefined && (
+                    <span class={`badge badge-sm ${peptide.data.is_natty ? 'badge-success' : 'badge-error'}`}>
+                      {peptide.data.is_natty ? 'Natty' : 'Not Natty'}
+                    </span>
+                  )}
+                </div>
                 <p>{peptide.data.what_it_does}</p>
                 <div class="card-actions justify-end">
                   <span class="badge badge-primary badge-outline">Learn more</span>
@@ -43,7 +88,11 @@ const peptides = allPeptides.filter(peptide =>
             </a>
           ))}
         </div>
+
+        <div class="mt-12">
+          <FAQ />
+        </div>
       </div>
     </div>
   </div>
-</main>
+</div>

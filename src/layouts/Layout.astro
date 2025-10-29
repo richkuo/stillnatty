@@ -13,6 +13,10 @@ interface Props {
   publishedTime?: string;
   modifiedTime?: string;
   author?: string;
+  keywords?: string;
+  breadcrumbs?: Array<{ name: string; url: string }>;
+  faqItems?: Array<{ question: string; answer: string }>;
+  itemList?: Array<{ name: string; url: string; description: string }>;
 }
 
 const {
@@ -22,7 +26,11 @@ const {
   image,
   publishedTime,
   modifiedTime,
-  author
+  author,
+  keywords,
+  breadcrumbs,
+  faqItems,
+  itemList
 } = Astro.props;
 ---
 <!doctype html>
@@ -40,12 +48,18 @@ const {
       publishedTime={publishedTime}
       modifiedTime={modifiedTime}
       author={author}
+      keywords={keywords}
+      breadcrumbs={breadcrumbs}
+      faqItems={faqItems}
+      itemList={itemList}
     />
   </head>
   <body>
-    <img src={background.src} alt="Abstract gradient background" class="fixed inset-0 w-full h-full -z-10 blur-[100px]" />
+    <img src={background.src} alt="Abstract gradient background for Still Natty peptides guide" class="fixed inset-0 w-full h-full -z-10 blur-[100px]" loading="lazy" />
     <Header />
-    <slot />
+    <main>
+      <slot />
+    </main>
     <Footer />
   </body>
 </html>

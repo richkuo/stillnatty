@@ -1,24 +1,14 @@
 ---
-import { getCollection } from 'astro:content';
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-import PostHogLayout from '../layouts/PostHogLayout.astro';
-import { CURRENT_PEPTIDE_FILES } from '../constants/peptides';
+interface FAQItem {
+  question: string;
+  answer: string;
+}
 
-const allPeptides = await getCollection('peptides');
-const peptides = allPeptides.filter(peptide =>
-  CURRENT_PEPTIDE_FILES.includes(peptide.slug as any)
-);
+interface Props {
+  items?: FAQItem[];
+}
 
-// Build item list for structured data
-const itemList = peptides.map(peptide => ({
-  name: peptide.data.popular_name || peptide.data.title || '',
-  url: `/${peptide.slug}`,
-  description: peptide.data.what_it_does || ''
-}));
-
-// FAQ items for structured data
-const faqItems = [
+const defaultFAQs: FAQItem[] = [
   {
     question: "What does 'natty' mean?",
     answer: "Natty (short for 'natural') refers to achieving fitness results without using performance-enhancing drugs like anabolic steroids, growth hormone, or other banned substances. In the fitness community, being natty means building muscle and improving performance through natural methods like diet, training, and recovery."
@@ -40,16 +30,26 @@ const faqItems = [
     answer: "This is a grey area in the fitness community. Some argue that therapeutic use of peptides like BPC-157 for injury recovery doesn't count against natty status since it's for healing, not performance enhancement. However, most strict natural bodybuilding organizations would still classify this as non-natty. The intent and context matter."
   }
 ];
+
+const { items = defaultFAQs } = Astro.props;
 ---
 
-<PostHogLayout>
-  <Layout
-    title="Natty or Not? Your Complete Guide to Peptides | Still Natty"
-    description="Discover if peptides are natty or not. Comprehensive guides on BPC-157, Semaglutide, NAD+, and more. Learn about benefits, dosages, WADA status, and natural performance optimization."
-    keywords="natty or not, peptides natty status, natural bodybuilding, BPC-157, semaglutide, therapeutic peptides, WADA prohibited list, performance enhancement, natty guide"
-    itemList={itemList}
-    faqItems={faqItems}
-  >
-    <Welcome />
-  </Layout>
-</PostHogLayout>
+<section class="card bg-base-200 w-full">
+  <div class="card-body">
+    <h2 class="card-title text-2xl mb-4">Frequently Asked Questions</h2>
+    <div class="space-y-4">
+      {items.map((faq) => (
+        <div class="collapse collapse-plus bg-base-100">
+          <input type="radio" name="faq-accordion" />
+          <div class="collapse-title text-lg font-medium">
+            {faq.question}
+          </div>
+          <div class="collapse-content">
+            <p class="pt-2">{faq.answer}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+

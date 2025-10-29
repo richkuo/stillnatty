@@ -29,7 +29,13 @@ export const getStaticPaths = (async () => {
     const slug = path.split('/').pop()?.replace('.md', '') || '';
     return {
       params: { peptide: slug },
-      props: { file }
+      props: { 
+        file,
+        allPeptides: Object.entries(peptideModules).map(([p, f]) => ({
+          slug: p.split('/').pop()?.replace('.md', '') || '',
+          data: (f as any).frontmatter
+        }))
+      }
     };
   });
 
@@ -39,21 +45,83 @@ export const getStaticPaths = (async () => {
 type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-const { file } = Astro.props as Props;
+const { file, allPeptides } = Astro.props as Props & { allPeptides: Array<{ slug: string; data: Frontmatter }> };
 const { default: Content, frontmatter } = file as { default: any; frontmatter: Frontmatter };
+const { peptide } = Astro.params;
 
-// Build dynamic description
-const pageTitle = `${frontmatter.title || 'Peptide'} - Still Natty`;
-const pageDescription = frontmatter.full_description || frontmatter.short_description || `Learn about ${frontmatter.title}, including benefits, dosages, and scientific research.`;
+// Find related peptides based on shared tags and natty status
+const getRelatedPeptides = () => {
+  if (!allPeptides || !frontmatter.tags) return [];
+  
+  const currentTags = frontmatter.tags || [];
+  const currentNatty = frontmatter.is_natty;
+  
+  return allPeptides
+    .filter(p => p.slug !== peptide) // Exclude current peptide
+    .map(p => {
+      const sharedTags = currentTags.filter(tag => p.data.tags?.includes(tag)).length;
+      const sameNattyStatus = p.data.is_natty === currentNatty;
+      return {
+        ...p,
+        score: sharedTags + (sameNattyStatus ? 2 : 0) // Bonus for same natty status
+      };
+    })
+    .filter(p => p.score > 0) // Only include if there's some relation
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3); // Top 3 related peptides
+};
+
+const relatedPeptides = getRelatedPeptides();
+
+// Get natty alternatives (natty peptides only)
+const getNattyAlternatives = () => {
+  if (!allPeptides || frontmatter.is_natty !== false) return []; // Only show for non-natty peptides
+  
+  return allPeptides
+    .filter(p => p.data.is_natty === true && p.slug !== peptide)
+    .slice(0, 3);
+};
+
+const nattyAlternatives = getNattyAlternatives();
+
+// Build dynamic description with natty or not language
+const nattyStatus = frontmatter.is_natty !== undefined 
+  ? (frontmatter.is_natty ? 'Natty' : 'Not Natty') 
+  : 'Unknown Status';
+const pageTitle = `${frontmatter.popular_name || frontmatter.title}: Natty or Not? | Still Natty`;
+const pageDescription = `${frontmatter.popular_name} is ${nattyStatus}. ${frontmatter.short_description || frontmatter.full_description || `Learn about benefits, dosages, research, and natty status.`}`;
+const pageKeywords = `${frontmatter.popular_name} natty or not, ${frontmatter.popular_name}, ${frontmatter.tags?.join(', ')}, peptides, natural bodybuilding, WADA status`;
+
+// Breadcrumbs for SEO
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Peptides', url: '/' },
+  { name: frontmatter.popular_name || frontmatter.title || 'Peptide', url: `/${peptide}` }
+];
+
+// Get natty status explanation
+const getNattyExplanation = (isNatty: boolean | undefined) => {
+  if (isNatty === undefined) return null;
+  
+  if (isNatty) {
+    return "This peptide is generally considered within the natty realm by some in the fitness community, particularly when used for therapeutic healing purposes. However, opinions vary, and competitive natural bodybuilding organizations may have different stances. Always check your federation's specific rules if you compete.";
+  } else {
+    return "This peptide is classified as NOT natty. It is prohibited by WADA (World Anti-Doping Agency) and most natural bodybuilding federations. Using this compound would place you in the 'enhanced' category rather than natural/natty status in competitive contexts.";
+  }
+};
+
+const nattyExplanation = getNattyExplanation(frontmatter.is_natty);
 ---
 
 <PostHogLayout>
   <Layout
     title={pageTitle}
     description={pageDescription}
+    keywords={pageKeywords}
     type="article"
     publishedTime={frontmatter.created_at}
     modifiedTime={frontmatter.last_updated_at}
+    breadcrumbs={breadcrumbs}
   >
     <div class="hero min-h-screen">
       <div class="hero-content w-full max-w-4xl">
@@ -100,8 +168,33 @@ const pageDescription = frontmatter.full_description || frontmatter.short_descri
               {frontmatter.what_it_does && (
                 <div class="card bg-base-200 w-full">
                   <div class="card-body">
-                    <h3 class="card-title">What It Does</h3>
+                    <h2 class="card-title">What It Does</h2>
                     <p>{frontmatter.what_it_does}</p>
+                  </div>
+                </div>
+              )}
+
+              {nattyExplanation && (
+                <div class={`card w-full ${frontmatter.is_natty ? 'bg-success/10 border-2 border-success' : 'bg-error/10 border-2 border-error'}`}>
+                  <div class="card-body">
+                    <h2 class="card-title flex items-center gap-2">
+                      {frontmatter.is_natty ? (
+                        <>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-success" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                          </svg>
+                          Natty Status Classification
+                        </>
+                      ) : (
+                        <>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-error" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                          </svg>
+                          Not Natty Classification
+                        </>
+                      )}
+                    </h2>
+                    <p>{nattyExplanation}</p>
                   </div>
                 </div>
               )}
@@ -282,6 +375,59 @@ const pageDescription = frontmatter.full_description || frontmatter.short_descri
               <div class="prose prose-lg max-w-none">
                 <Content />
               </div>
+
+              {(relatedPeptides.length > 0 || nattyAlternatives.length > 0) && (
+                <div class="divider my-8"></div>
+              )}
+
+              {relatedPeptides.length > 0 && (
+                <section class="mb-8">
+                  <h2 class="text-2xl font-bold mb-4">Related Peptides</h2>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {relatedPeptides.map((related) => (
+                      <a 
+                        href={`/${related.slug}`} 
+                        class="card bg-base-200 shadow-lg hover:shadow-xl transition-all"
+                      >
+                        <div class="card-body card-compact">
+                          <div class="flex items-start justify-between">
+                            <h3 class="card-title text-lg uppercase">{related.data.popular_name || related.data.title}</h3>
+                            {related.data.is_natty !== undefined && (
+                              <span class={`badge badge-sm ${related.data.is_natty ? 'badge-success' : 'badge-error'}`}>
+                                {related.data.is_natty ? 'Natty' : 'Not Natty'}
+                              </span>
+                            )}
+                          </div>
+                          <p class="text-sm">{related.data.what_it_does}</p>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {nattyAlternatives.length > 0 && (
+                <section class="mb-8">
+                  <h2 class="text-2xl font-bold mb-4">Looking for Natty Alternatives?</h2>
+                  <p class="mb-4">Since this peptide is classified as not natty, here are some natty-approved options you might consider:</p>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {nattyAlternatives.map((alternative) => (
+                      <a 
+                        href={`/${alternative.slug}`} 
+                        class="card bg-success/10 border-2 border-success shadow-lg hover:shadow-xl transition-all"
+                      >
+                        <div class="card-body card-compact">
+                          <div class="flex items-start justify-between">
+                            <h3 class="card-title text-lg uppercase">{alternative.data.popular_name || alternative.data.title}</h3>
+                            <span class="badge badge-sm badge-success">Natty</span>
+                          </div>
+                          <p class="text-sm">{alternative.data.what_it_does}</p>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              )}
               
               {frontmatter.last_updated_at && (
                 <div class="mt-4 text-sm text-base-content/60">
